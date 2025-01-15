@@ -26,15 +26,6 @@
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/busTypeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/design_default_color_primary"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:textColor="@android:color/white"
-                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout

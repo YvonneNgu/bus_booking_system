@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.example.bus_booking_system.data.database.AppDatabase;
 import com.example.bus_booking_system.data.database.BusDao;
 import com.example.bus_booking_system.data.model.Bus;
+import com.example.bus_booking_system.data.model.Booking;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -16,12 +17,18 @@ public class BusRepository {
     private BusDao busDao;
     private LiveData<List<Bus>> allBuses;
     private ExecutorService executorService;
+    private Application application;
 
     public BusRepository(Application application) {
+        this.application = application;
         AppDatabase db = AppDatabase.getDatabase(application);
         busDao = db.busDao();
         allBuses = busDao.getAllBuses();
         executorService = Executors.newSingleThreadExecutor();
+    }
+
+    protected Application getApplication() {
+        return application;
     }
 
     public LiveData<List<Bus>> getAllBuses() {
@@ -49,11 +56,11 @@ public class BusRepository {
     }
 
     public void decreaseAvailableSeats(int busId) {
-        executorService.execute(() -> busDao.decreaseAvailableSeats(busId));
+        executorService.execute(() -> busDao.decrementAvailableSeats(busId));
     }
 
     public void increaseAvailableSeats(int busId) {
-        executorService.execute(() -> busDao.increaseAvailableSeats(busId));
+        executorService.execute(() -> busDao.incrementAvailableSeats(busId));
     }
 
     public LiveData<Integer> getAvailableSeats(int busId) {
@@ -76,7 +83,7 @@ public class BusRepository {
                 if (seatStatus != null && seatNumber > 0 && seatNumber <= seatStatus.length) {
                     seatStatus[seatNumber - 1] = false;
                     busDao.updateSeatStatus(busId, seatStatus);
-                    busDao.decreaseAvailableSeats(busId);
+                    busDao.decrementAvailableSeats(busId);
                 }
             }
         });
@@ -90,7 +97,7 @@ public class BusRepository {
                 if (seatStatus != null && seatNumber > 0 && seatNumber <= seatStatus.length) {
                     seatStatus[seatNumber - 1] = true;
                     busDao.updateSeatStatus(busId, seatStatus);
-                    busDao.increaseAvailableSeats(busId);
+                    busDao.incrementAvailableSeats(busId);
                 }
             }
         });
@@ -110,5 +117,15 @@ public class BusRepository {
     
     public LiveData<List<String>> getSourcesForDestination(String destination) {
         return busDao.getSourcesForDestination(destination);
+    }
+
+    /**
+     * Get all bookings for a specific bus on a specific date
+     * @param busId The ID of the bus
+     * @param journeyDate The date of travel in dd/MM/yyyy format
+     * @return LiveData containing list of bookings for that date
+     */
+    public LiveData<List<Booking>> getBookingsByBusAndDate(int busId, String journeyDate) {
+        return AppDatabase.getDatabase(getApplication()).bookingDao().getBookingsByBusAndDate(busId, journeyDate);
     }
 } 

@@ -31,6 +31,13 @@ public interface BookingDao {
     @Query("SELECT * FROM bookings WHERE busId = :busId")
     LiveData<List<Booking>> getBusBookings(int busId);
     
+    /**
+     * Get bookings for a specific bus on a specific date
+     * Used to check seat availability for a particular journey date
+     * @param busId The ID of the bus
+     * @param journeyDate The date of travel in dd/MM/yyyy format
+     * @return List of bookings for that bus and date
+     */
     @Query("SELECT * FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate")
     LiveData<List<Booking>> getBookingsByBusAndDate(int busId, String journeyDate);
     
@@ -46,6 +53,13 @@ public interface BookingDao {
     @Query("SELECT EXISTS(SELECT 1 FROM buses WHERE id = :busId LIMIT 1)")
     boolean checkBusExists(int busId);
     
+    /**
+     * Check if a specific seat is booked for a journey date
+     * @param busId The ID of the bus
+     * @param journeyDate The date of travel in dd/MM/yyyy format
+     * @param seatNumber The seat number to check
+     * @return Number of bookings for that seat (0 if available, 1 if booked)
+     */
     @Query("SELECT COUNT(*) FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate AND seatNumber = :seatNumber")
     LiveData<Integer> isSeatBooked(int busId, String journeyDate, String seatNumber);
     
