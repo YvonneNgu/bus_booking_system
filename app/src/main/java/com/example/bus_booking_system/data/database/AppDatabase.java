@@ -45,11 +45,101 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "bus_booking_database")
                             .fallbackToDestructiveMigration()
-                            .addMigrations(MIGRATION_1_2)
+                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
         }
         return INSTANCE;
+    }
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            new PopulateDbAsync(INSTANCE).execute();
+        }
+
+        @Override
+        public void onOpen(SupportSQLiteDatabase db) {
+            super.onOpen(db);
+            // Optional: You can also populate data when database is opened
+        }
+    };
+
+    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+        private final BusDao busDao;
+
+        PopulateDbAsync(AppDatabase db) {
+            busDao = db.busDao();
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            // Add sample bus routes
+            
+            // KL to Penang Route
+            busDao.insert(new Bus("KL001", "Sri Maju Express", "Kuala Lumpur", "Penang", 
+                "08:00", "13:00", 45.00, 30, 30, "AC"));
+            busDao.insert(new Bus("KL002", "Nice Express", "Kuala Lumpur", "Penang", 
+                "10:30", "15:30", 45.00, 30, 30, "AC"));
+            busDao.insert(new Bus("KL003", "Transnasional", "Kuala Lumpur", "Penang", 
+                "14:00", "19:00", 42.00, 30, 30, "Non-AC"));
+            busDao.insert(new Bus("KL004", "Plusliner", "Kuala Lumpur", "Penang", 
+                "20:00", "01:00", 48.00, 30, 30, "AC"));
+
+            // KL to JB Route
+            busDao.insert(new Bus("KL005", "Sri Maju Express", "Kuala Lumpur", "Johor Bahru", 
+                "07:00", "13:00", 55.00, 30, 30, "AC"));
+            busDao.insert(new Bus("KL006", "Transnasional", "Kuala Lumpur", "Johor Bahru", 
+                "09:30", "15:30", 52.00, 30, 30, "AC"));
+            busDao.insert(new Bus("KL007", "Plusliner", "Kuala Lumpur", "Johor Bahru", 
+                "13:00", "19:00", 55.00, 30, 30, "AC"));
+            busDao.insert(new Bus("KL008", "Nice Express", "Kuala Lumpur", "Johor Bahru", 
+                "22:00", "04:00", 58.00, 30, 30, "AC"));
+
+            // KL to Melaka Route
+            busDao.insert(new Bus("KL009", "Sri Maju Express", "Kuala Lumpur", "Melaka", 
+                "08:30", "11:30", 25.00, 30, 30, "AC"));
+            busDao.insert(new Bus("KL010", "Transnasional", "Kuala Lumpur", "Melaka", 
+                "11:00", "14:00", 23.00, 30, 30, "Non-AC"));
+            busDao.insert(new Bus("KL011", "Nice Express", "Kuala Lumpur", "Melaka", 
+                "14:30", "17:30", 25.00, 30, 30, "AC"));
+
+            // KL to Ipoh Route
+            busDao.insert(new Bus("KL012", "Plusliner", "Kuala Lumpur", "Ipoh", 
+                "07:30", "10:30", 35.00, 30, 30, "AC"));
+            busDao.insert(new Bus("KL013", "Sri Maju Express", "Kuala Lumpur", "Ipoh", 
+                "10:00", "13:00", 33.00, 30, 30, "AC"));
+            busDao.insert(new Bus("KL014", "Nice Express", "Kuala Lumpur", "Ipoh", 
+                "15:30", "18:30", 35.00, 30, 30, "AC"));
+
+            // Return routes
+            // Penang to KL
+            busDao.insert(new Bus("PG001", "Sri Maju Express", "Penang", "Kuala Lumpur", 
+                "08:00", "13:00", 45.00, 30, 30, "AC"));
+            busDao.insert(new Bus("PG002", "Transnasional", "Penang", "Kuala Lumpur", 
+                "14:00", "19:00", 42.00, 30, 30, "Non-AC"));
+
+            // JB to KL
+            busDao.insert(new Bus("JB001", "Plusliner", "Johor Bahru", "Kuala Lumpur", 
+                "07:00", "13:00", 55.00, 30, 30, "AC"));
+            busDao.insert(new Bus("JB002", "Sri Maju Express", "Johor Bahru", "Kuala Lumpur", 
+                "20:00", "02:00", 58.00, 30, 30, "AC"));
+
+            // Melaka to KL
+            busDao.insert(new Bus("MK001", "Nice Express", "Melaka", "Kuala Lumpur", 
+                "09:00", "12:00", 25.00, 30, 30, "AC"));
+            busDao.insert(new Bus("MK002", "Transnasional", "Melaka", "Kuala Lumpur", 
+                "15:00", "18:00", 23.00, 30, 30, "Non-AC"));
+
+            // Ipoh to KL
+            busDao.insert(new Bus("IP001", "Sri Maju Express", "Ipoh", "Kuala Lumpur", 
+                "08:30", "11:30", 35.00, 30, 30, "AC"));
+            busDao.insert(new Bus("IP002", "Plusliner", "Ipoh", "Kuala Lumpur", 
+                "16:30", "19:30", 33.00, 30, 30, "AC"));
+
+            return null;
+        }
     }
 } 
