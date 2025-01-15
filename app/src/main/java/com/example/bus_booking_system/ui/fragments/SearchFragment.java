@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import com.example.bus_booking_system.viewmodel.BusViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class SearchFragment extends Fragment implements BusAdapter.OnBusClickListener {
@@ -30,6 +33,10 @@ public class SearchFragment extends Fragment implements BusAdapter.OnBusClickLis
     private BusAdapter adapter;
     private Calendar selectedDate = Calendar.getInstance();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    private AutoCompleteTextView sourceInput;
+    private AutoCompleteTextView destinationInput;
+    private ArrayAdapter<String> sourceAdapter;
+    private ArrayAdapter<String> destinationAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,18 +50,67 @@ public class SearchFragment extends Fragment implements BusAdapter.OnBusClickLis
         
         setupViewModel();
         setupRecyclerView();
+        setupSpinners();
         setupClickListeners();
+        loadInitialData();
     }
 
     private void setupViewModel() {
         busViewModel = new ViewModelProvider(this).get(BusViewModel.class);
+    }
 
-        busViewModel.insert(new Bus("KTM001", "Sri Maju Express", "Kuala Lumpur", "Penang", "08:00", "13:00", 45.00, 40, 35, "AC"));
-        busViewModel.insert(new Bus("KTM002", "Transnasional", "Kuala Lumpur", "Johor Bahru", "09:30", "15:30", 55.00, 44, 44, "AC"));
-        busViewModel.insert(new Bus("KTM003", "Plusliner", "Penang", "Kuala Lumpur", "07:00", "12:00", 45.00, 40, 38, "AC"));
-        busViewModel.insert(new Bus("KTM004", "Aeroline", "Kuala Lumpur", "Singapore", "10:00", "16:00", 75.00, 32, 30, "AC"));
-        busViewModel.insert(new Bus("KTM005", "Nice Express", "Ipoh", "Kuala Lumpur", "06:30", "09:30", 35.00, 44, 40, "Non-AC"));
+    private void setupSpinners() {
+        sourceInput = binding.sourceInput;
+        destinationInput = binding.destinationInput;
 
+        sourceAdapter = new ArrayAdapter<>(requireContext(), 
+            android.R.layout.simple_dropdown_item_1line);
+        destinationAdapter = new ArrayAdapter<>(requireContext(), 
+            android.R.layout.simple_dropdown_item_1line);
+
+        sourceInput.setAdapter(sourceAdapter);
+        destinationInput.setAdapter(destinationAdapter);
+
+        // Add listeners for source selection
+        sourceInput.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedSource = sourceAdapter.getItem(position);
+            updateDestinationsForSource(selectedSource);
+            // Clear destination when source changes
+            destinationInput.setText("", false);
+        });
+
+        // Add listeners for destination selection
+        destinationInput.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedDestination = destinationAdapter.getItem(position);
+            updateSourcesForDestination(selectedDestination);
+        });
+    }
+
+    private void loadInitialData() {
+        // Load initial sources
+        busViewModel.getAllSources().observe(getViewLifecycleOwner(), this::updateSourceAdapter);
+    }
+
+    private void updateDestinationsForSource(String source) {
+        busViewModel.getDestinationsForSource(source).observe(getViewLifecycleOwner(), 
+            this::updateDestinationAdapter);
+    }
+
+    private void updateSourcesForDestination(String destination) {
+        if (sourceInput.getText().toString().isEmpty()) {
+            busViewModel.getSourcesForDestination(destination).observe(getViewLifecycleOwner(), 
+                this::updateSourceAdapter);
+        }
+    }
+
+    private void updateSourceAdapter(List<String> sources) {
+        sourceAdapter.clear();
+        sourceAdapter.addAll(sources);
+    }
+
+    private void updateDestinationAdapter(List<String> destinations) {
+        destinationAdapter.clear();
+        destinationAdapter.addAll(destinations);
     }
 
     private void setupRecyclerView() {
@@ -84,8 +140,8 @@ public class SearchFragment extends Fragment implements BusAdapter.OnBusClickLis
     }
 
     private void performSearch() {
-        String source = binding.sourceInput.getText().toString().trim();
-        String destination = binding.destinationInput.getText().toString().trim();
+        String source = sourceInput.getText().toString().trim();
+        String destination = destinationInput.getText().toString().trim();
         String date = binding.dateInput.getText().toString().trim();
 
         if (source.isEmpty() || destination.isEmpty() || date.isEmpty()) {
@@ -110,7 +166,6 @@ public class SearchFragment extends Fragment implements BusAdapter.OnBusClickLis
 
     @Override
     public void onBookClick(Bus bus) {
-        // Same as onBusClick for now
         onBusClick(bus);
     }
 

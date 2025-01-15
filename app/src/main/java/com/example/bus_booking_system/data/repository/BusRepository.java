@@ -95,4 +95,20 @@ public class BusRepository {
             }
         });
     }
+
+    public LiveData<List<String>> getAllSources() {
+        return busDao.getAllSources();
+    }
+
+    public LiveData<List<String>> getAllDestinations() {
+        return busDao.getAllDestinations();
+    }
+
+    public LiveData<List<String>> getDestinationsForSource(String source) {
+        return busDao.getDestinationsForSource(source);
+    }
+    
+    public LiveData<List<String>> getSourcesForDestination(String destination) {
+        return busDao.getSourcesForDestination(destination);
+    }
 } 
