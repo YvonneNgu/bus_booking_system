@@ -1,0 +1,19 @@
+Index: app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bus_booking_system.ui.fragments;\n\nimport android.os.Bundle;\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.fragment.app.Fragment;\nimport androidx.lifecycle.ViewModelProvider;\nimport androidx.recyclerview.widget.LinearLayoutManager;\n\nimport com.example.bus_booking_system.data.model.Booking;\nimport com.example.bus_booking_system.databinding.FragmentBookingsBinding;\nimport com.example.bus_booking_system.ui.adapter.BookingsAdapter;\nimport com.example.bus_booking_system.utils.SessionManager;\nimport com.example.bus_booking_system.viewmodel.BookingViewModel;\n\nimport java.util.ArrayList;\n\npublic class BookingsFragment extends Fragment {\n    private FragmentBookingsBinding binding;\n    private BookingViewModel bookingViewModel;\n    private SessionManager sessionManager;\n\n    private BookingsAdapter bookingsAdapter;\n\n\n    @Override\n    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {\n        binding = FragmentBookingsBinding.inflate(inflater, container, false);\n        return binding.getRoot();\n    }\n\n    @Override\n    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {\n        super.onViewCreated(view, savedInstanceState);\n        setupViewModel();\n        setupUI();\n    }\n\n    private void setupViewModel() {\n        bookingViewModel = new ViewModelProvider(this).get(BookingViewModel.class);\n        bookingViewModel.insert(new Booking(\n            2,  // userId\n            2,  // busId\n            \"2025-01-14\",  // bookingDate\n            \"2025-01-21\",  // journeyDate\n            5,  // seatNumber\n            55.00  // fare\n        ));\n\n        sessionManager = new SessionManager(requireContext());\n    }\n\n    private void setupUI() {\n        binding.bookingsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));\n        bookingsAdapter = new BookingsAdapter(new ArrayList<>());\n        binding.bookingsRecyclerView.setAdapter(bookingsAdapter);\n\n        int userId = sessionManager.getUserId();\n        bookingViewModel.getUserBookings(userId).observe(getViewLifecycleOwner(), bookings -> {\n            bookingsAdapter.setBookings(bookings);\n            binding.emptyView.setVisibility(bookings.isEmpty() ? View.VISIBLE : View.GONE);\n            binding.bookingsRecyclerView.setVisibility(bookings.isEmpty() ? View.GONE : View.VISIBLE);\n        });\n    }\n\n\n    @Override\n    public void onDestroyView() {\n        super.onDestroyView();\n        binding = null;\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java b/app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java
+--- a/app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java	(revision 94fae0299c24235e8d77519fddf817b067b32950)
++++ b/app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java	(date 1736943377604)
+@@ -43,7 +43,7 @@
+     private void setupViewModel() {
+         bookingViewModel = new ViewModelProvider(this).get(BookingViewModel.class);
+         bookingViewModel.insert(new Booking(
+-            2,  // userId
++            1,  // userId
+             2,  // busId
+             "2025-01-14",  // bookingDate
+             "2025-01-21",  // journeyDate
