@@ -1,13 +1,17 @@
 package com.example.bus_booking_system.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.bus_booking_system.R;
@@ -127,7 +131,7 @@ public class BusDetailsActivity extends AppCompatActivity {
                         seatButton.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                     } else {
                         seatButton.setEnabled(true);
-                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.white));
+//                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.white));
                     }
                 }
             }
@@ -135,15 +139,24 @@ public class BusDetailsActivity extends AppCompatActivity {
     }
 
     private void onSeatSelected(int seatNumber) {
+        // Reset the background color of the previously selected seat
         if (selectedSeat != -1) {
-            seatButtons[selectedSeat - 1].setBackgroundColor(getResources().getColor(android.R.color.white));
+            seatButtons[selectedSeat - 1].setBackgroundColor(getThemeColor(this, com.google.android.material.R.attr.colorPrimary));
         }
-        
+
+        // Set the new selected seat
         selectedSeat = seatNumber;
-        seatButtons[seatNumber - 1].setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        seatButtons[seatNumber - 1].setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_green_light));
         binding.selectedSeatText.setText("Seat " + seatNumber);
         binding.proceedButton.setEnabled(true);
     }
+
+    public int getThemeColor(Context context, int colorAttribute) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(colorAttribute, typedValue, true);
+        return typedValue.data;
+    }
+
 
     private void setupClickListeners() {
         binding.proceedButton.setOnClickListener(v -> proceedToBooking());

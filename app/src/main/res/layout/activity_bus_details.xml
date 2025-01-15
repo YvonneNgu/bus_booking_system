@@ -144,12 +144,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:columnCount="3"
-                        android:rowCount="10"
-                        android:useDefaultMargins="true"
                         android:alignmentMode="alignMargins"
+                        android:columnCount="3"
                         android:columnOrderPreserved="false"
-                        android:padding="4dp" />
+                        android:padding="4dp"
+                        android:rowCount="10"
+                        android:useDefaultMargins="true" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
