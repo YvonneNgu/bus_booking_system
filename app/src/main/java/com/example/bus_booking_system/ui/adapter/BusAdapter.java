@@ -3,7 +3,6 @@ package com.example.bus_booking_system.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
@@ -12,15 +11,12 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bus_booking_system.R;
 import com.example.bus_booking_system.data.model.Bus;
 import com.example.bus_booking_system.databinding.ItemBusBinding;
-import com.example.bus_booking_system.ui.SeatSelectionActivity;
+import com.example.bus_booking_system.ui.BusDetailsActivity;
 
 public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
     private final OnBusClickListener listener;
-
-
 
     public BusAdapter(OnBusClickListener listener) {
         super(new BusDiffCallback());
@@ -37,13 +33,16 @@ public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BusViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        Bus bus = getItem(position);
+        holder.bind(bus);
         holder.bookButton.setOnClickListener(v -> {
             Context context = v.getContext();
-            Intent intent = new Intent(context, SeatSelectionActivity.class);
+            Intent intent = new Intent(context, BusDetailsActivity.class);
+            intent.putExtra("bus_id", bus.getId());
+            intent.putExtra("bus_number", bus.getBusNumber());
+            intent.putExtra("available_seats", bus.getAvailableSeats());
             context.startActivity(intent);
         });
-
     }
 
     class BusViewHolder extends RecyclerView.ViewHolder {

@@ -24,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Set up the toolbar
+        setSupportActionBar(binding.toolbar);
+
         sessionManager = new SessionManager(this);
 
         // Log the current user ID
@@ -33,23 +36,25 @@ public class MainActivity extends AppCompatActivity {
         // Setup Navigation
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
-        navController = navHostFragment.getNavController();
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
 
-        // Setup Bottom Navigation
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home,
-                R.id.navigation_search,
-                R.id.navigation_bookings,
-                R.id.navigation_profile
-        ).build();
+            // Setup Bottom Navigation
+            AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.navigation_home,
+                    R.id.navigation_search,
+                    R.id.navigation_bookings,
+                    R.id.navigation_profile
+            ).build();
 
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
+        }
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        return navController.navigateUp() || super.onSupportNavigateUp();
+        return navController != null && navController.navigateUp() || super.onSupportNavigateUp();
     }
 
     @Override

@@ -36,4 +36,13 @@ public interface BusDao {
     
     @Query("UPDATE buses SET availableSeats = availableSeats + 1 WHERE id = :busId AND availableSeats < totalSeats")
     void increaseAvailableSeats(int busId);
+    
+    @Query("SELECT availableSeats FROM buses WHERE id = :busId")
+    LiveData<Integer> getAvailableSeats(int busId);
+    
+    @Query("SELECT seatStatus FROM buses WHERE id = :busId")
+    LiveData<boolean[]> getSeatStatus(int busId);
+    
+    @Query("UPDATE buses SET seatStatus = :newSeatStatus WHERE id = :busId")
+    void updateSeatStatus(int busId, boolean[] newSeatStatus);
 } 

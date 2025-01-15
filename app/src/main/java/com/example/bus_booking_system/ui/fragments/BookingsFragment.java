@@ -42,12 +42,14 @@ public class BookingsFragment extends Fragment {
 
     private void setupViewModel() {
         bookingViewModel = new ViewModelProvider(this).get(BookingViewModel.class);
-//        bookingViewModel.insert(new Booking(1, 1, "2025-01-14", "2025-01-20", 12, 45.00, "CONFIRMED", "PAID"));
-//        bookingViewModel.insert(new Booking(2, 1, "2025-01-14", "2025-01-20", 13, 45.00, "CONFIRMED", "PAID"));
-        bookingViewModel.insert(new Booking(2, 2, "2025-01-14", "2025-01-21", 5, 55.00, "EghjfgfhfjterEEEEE", "EEEEghhgvgggfEE"));
-//        bookingViewModel.insert(new Booking(4, 3, "2025-01-13", "2025-01-19", 22, 45.00, "CANCELLED", "PAID"));
-//        bookingViewModel.insert(new Booking(5, 4, "2025-01-15", "2025-01-22", 15, 75.00, "CONFIRMED", "PAID"));
-////        bookingViewModel.insert(new Booking(6, 5, "2025-01-15", "2025-01-18", 33, 35.00, "CONFIRMED", "PENDING"));
+        bookingViewModel.insert(new Booking(
+            2,  // userId
+            2,  // busId
+            "2025-01-14",  // bookingDate
+            "2025-01-21",  // journeyDate
+            5,  // seatNumber
+            55.00  // fare
+        ));
 
         sessionManager = new SessionManager(requireContext());
     }

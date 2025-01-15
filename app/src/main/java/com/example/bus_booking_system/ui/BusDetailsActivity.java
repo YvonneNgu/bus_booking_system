@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.bus_booking_system.R;
 import com.example.bus_booking_system.data.model.Booking;
 import com.example.bus_booking_system.data.model.Bus;
 import com.example.bus_booking_system.databinding.ActivityBusDetailsBinding;
@@ -20,6 +21,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class BusDetailsActivity extends AppCompatActivity {
@@ -31,6 +33,7 @@ public class BusDetailsActivity extends AppCompatActivity {
     private String journeyDate;
     private int selectedSeat = -1;
     private MaterialButton[] seatButtons;
+    private List<Integer> bookedSeats;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +41,12 @@ public class BusDetailsActivity extends AppCompatActivity {
         binding = ActivityBusDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Set up toolbar
         setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Bus Details");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Select Seat");
+        }
 
         setupViewModels();
         loadBusDetails();
@@ -67,7 +73,7 @@ public class BusDetailsActivity extends AppCompatActivity {
             if (bus != null) {
                 currentBus = bus;
                 updateUI(bus);
-                setupSeats(bus.getTotalSeats());
+                initializeSeatGrid();
                 loadBookedSeats(bus.getId());
             }
         });
@@ -83,53 +89,58 @@ public class BusDetailsActivity extends AppCompatActivity {
         binding.fareText.setText(String.format("₹%.2f", bus.getFare()));
     }
 
-    private void setupSeats(int totalSeats) {
+    private void initializeSeatGrid() {
+        GridLayout seatGrid = binding.seatsContainer;
+        seatGrid.removeAllViews(); // Clear existing views
+        
+        int totalSeats = currentBus != null ? currentBus.getTotalSeats() : 30;
         seatButtons = new MaterialButton[totalSeats];
-        binding.seatsContainer.removeAllViews();
-
+        
         for (int i = 0; i < totalSeats; i++) {
-            MaterialButton seatButton = new MaterialButton(this, null, 
-                    com.google.android.material.R.attr.materialButtonOutlinedStyle);
+            MaterialButton seatButton = new MaterialButton(this);
             seatButton.setText(String.valueOf(i + 1));
             seatButton.setTag(i + 1);
-
+            
+            // Set layout parameters for the button
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 0;
+            params.width = GridLayout.LayoutParams.WRAP_CONTENT;
             params.height = GridLayout.LayoutParams.WRAP_CONTENT;
             params.setMargins(8, 8, 8, 8);
-            params.columnSpec = GridLayout.spec(i % 4, 1f);
-            params.rowSpec = GridLayout.spec(i / 4, 1f);
             seatButton.setLayoutParams(params);
-
+            
+            // Add click listener
             final int seatNumber = i + 1;
             seatButton.setOnClickListener(v -> onSeatSelected(seatNumber));
-
+            
             seatButtons[i] = seatButton;
-            binding.seatsContainer.addView(seatButton);
+            seatGrid.addView(seatButton);
         }
     }
 
     private void loadBookedSeats(int busId) {
-        bookingViewModel.getBookingsByBusAndDate(busId, journeyDate)
-                .observe(this, bookings -> {
-                    for (Booking booking : bookings) {
-                        if (booking.getStatus().equals("CONFIRMED")) {
-                            int seatNumber = booking.getSeatNumber();
-                            seatButtons[seatNumber - 1].setEnabled(false);
-                            seatButtons[seatNumber - 1].setBackgroundColor(
-                                    getResources().getColor(android.R.color.darker_gray));
-                        }
+        busViewModel.getSeatStatus(busId).observe(this, seatStatus -> {
+            if (seatStatus != null) {
+                for (int i = 0; i < seatStatus.length; i++) {
+                    MaterialButton seatButton = seatButtons[i];
+                    if (!seatStatus[i]) { // Seat is booked
+                        seatButton.setEnabled(false);
+                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                    } else {
+                        seatButton.setEnabled(true);
+                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.white));
                     }
-                });
+                }
+            }
+        });
     }
 
     private void onSeatSelected(int seatNumber) {
         if (selectedSeat != -1) {
-            seatButtons[selectedSeat - 1].setChecked(false);
+            seatButtons[selectedSeat - 1].setBackgroundColor(getResources().getColor(android.R.color.white));
         }
-
+        
         selectedSeat = seatNumber;
-        seatButtons[seatNumber - 1].setChecked(true);
+        seatButtons[seatNumber - 1].setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
         binding.selectedSeatText.setText("Seat " + seatNumber);
         binding.proceedButton.setEnabled(true);
     }
@@ -157,12 +168,10 @@ public class BusDetailsActivity extends AppCompatActivity {
         );
 
         bookingViewModel.insert(booking);
-        busViewModel.decreaseAvailableSeats(currentBus.getId());
+        busViewModel.bookSeat(currentBus.getId(), selectedSeat);
 
-        /*Intent intent = new Intent(this, PaymentActivity.class);
-        intent.putExtra("booking_id", booking.getId());
-        startActivity(intent);
-        finish();*/
+        Toast.makeText(this, "Booking successful!", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override

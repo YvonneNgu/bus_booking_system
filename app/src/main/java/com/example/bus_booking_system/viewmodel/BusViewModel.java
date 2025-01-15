@@ -51,4 +51,20 @@ public class BusViewModel extends AndroidViewModel {
     public void increaseAvailableSeats(int busId) {
         repository.increaseAvailableSeats(busId);
     }
+
+    public LiveData<Integer> getAvailableSeats(int busId) {
+        return repository.getAvailableSeats(busId);
+    }
+
+    public LiveData<boolean[]> getSeatStatus(int busId) {
+        return repository.getSeatStatus(busId);
+    }
+
+    public void bookSeat(int busId, int seatNumber) {
+        repository.bookSeat(busId, seatNumber);
+    }
+
+    public void releaseSeat(int busId, int seatNumber) {
+        repository.releaseSeat(busId, seatNumber);
+    }
 } 

@@ -55,4 +55,44 @@ public class BusRepository {
     public void increaseAvailableSeats(int busId) {
         executorService.execute(() -> busDao.increaseAvailableSeats(busId));
     }
+
+    public LiveData<Integer> getAvailableSeats(int busId) {
+        return busDao.getAvailableSeats(busId);
+    }
+
+    public LiveData<boolean[]> getSeatStatus(int busId) {
+        return busDao.getSeatStatus(busId);
+    }
+
+    public void updateSeatStatus(int busId, boolean[] seatStatus) {
+        executorService.execute(() -> busDao.updateSeatStatus(busId, seatStatus));
+    }
+
+    public void bookSeat(int busId, int seatNumber) {
+        executorService.execute(() -> {
+            Bus bus = busDao.getBusById(busId).getValue();
+            if (bus != null) {
+                boolean[] seatStatus = bus.getSeatStatus();
+                if (seatStatus != null && seatNumber > 0 && seatNumber <= seatStatus.length) {
+                    seatStatus[seatNumber - 1] = false;
+                    busDao.updateSeatStatus(busId, seatStatus);
+                    busDao.decreaseAvailableSeats(busId);
+                }
+            }
+        });
+    }
+
+    public void releaseSeat(int busId, int seatNumber) {
+        executorService.execute(() -> {
+            Bus bus = busDao.getBusById(busId).getValue();
+            if (bus != null) {
+                boolean[] seatStatus = bus.getSeatStatus();
+                if (seatStatus != null && seatNumber > 0 && seatNumber <= seatStatus.length) {
+                    seatStatus[seatNumber - 1] = true;
+                    busDao.updateSeatStatus(busId, seatStatus);
+                    busDao.increaseAvailableSeats(busId);
+                }
+            }
+        });
+    }
 } 
