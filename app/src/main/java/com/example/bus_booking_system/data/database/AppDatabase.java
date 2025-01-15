@@ -13,7 +13,7 @@ import com.example.bus_booking_system.data.model.Booking;
 import com.example.bus_booking_system.data.model.User;
 import com.example.bus_booking_system.data.model.BooleanArrayConverter;
 
-@Database(entities = {User.class, Bus.class, Booking.class}, version = 3, exportSchema = false)
+@Database(entities = {User.class, Bus.class, Booking.class}, version = 4, exportSchema = false)
 @TypeConverters({BooleanArrayConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase INSTANCE;
