@@ -18,6 +18,30 @@
         android:text="Journey Date" />
 
     <TextView
+        android:id="@+id/sourceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Source" />
+
+    <TextView
+        android:id="@+id/destinationTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Destination" />
+
+    <TextView
+        android:id="@+id/departureTimeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DepartureTime" />
+
+    <TextView
+        android:id="@+id/arrivalTimeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="arrivalTime" />
+
+    <TextView
         android:id="@+id/seatNumberTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

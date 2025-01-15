@@ -26,6 +26,15 @@ public class Booking {
     private int busId;
     private String bookingDate;
     private String journeyDate;
+
+    private String source;
+
+    private String destination;
+
+    private String departureTime;
+
+    private String arrivalTime;
+
     private int seatNumber;
     private double totalFare;
     private String status; // CONFIRMED, CANCELLED, PENDING
@@ -34,32 +43,44 @@ public class Booking {
     
     // Primary constructor with seat management
     public Booking(int userId, int busId, String bookingDate, String journeyDate,
-                  int seatNumber, double totalFare) {
-        this.userId = userId;
-        this.busId = busId;
-        this.bookingDate = bookingDate;
-        this.journeyDate = journeyDate;
-        this.seatNumber = seatNumber;
-        this.totalFare = totalFare;
-        this.status = "CONFIRMED";
-        this.paymentStatus = "PENDING";
-        this.seatStatus = "RESERVED";
+                  int seatNumber, double totalFare, String source, String destination, String departureTime, String arrivalTime ) {
+        {
+            this.userId = userId;
+            this.busId = busId;
+            this.bookingDate = bookingDate;
+            this.journeyDate = journeyDate;
+            this.seatNumber = seatNumber;
+            this.totalFare = totalFare;
+            this.status = "CONFIRMED";
+            this.paymentStatus = "PENDING";
+            this.seatStatus = "RESERVED";
+            this.source = source;
+            this.destination = destination;
+            this.departureTime = departureTime;
+            this.arrivalTime = arrivalTime;
+        }
     }
 
     @Ignore
     // Full constructor with all parameters
     public Booking(int userId, int busId, String bookingDate, String journeyDate,
                   int seatNumber, double totalFare, String status, 
-                  String paymentStatus, String seatStatus) {
-        this.userId = userId;
-        this.busId = busId;
-        this.bookingDate = bookingDate;
-        this.journeyDate = journeyDate;
-        this.seatNumber = seatNumber;
-        this.totalFare = totalFare;
-        this.status = status;
-        this.paymentStatus = paymentStatus;
-        this.seatStatus = seatStatus;
+                  String paymentStatus, String seatStatus, String source, String destination, String departureTime, String arrivalTime) {
+        {
+            this.userId = userId;
+            this.busId = busId;
+            this.bookingDate = bookingDate;
+            this.journeyDate = journeyDate;
+            this.seatNumber = seatNumber;
+            this.totalFare = totalFare;
+            this.status = status;
+            this.paymentStatus = paymentStatus;
+            this.seatStatus = seatStatus;
+            this.source = source;
+            this.destination = destination;
+            this.departureTime = departureTime;
+            this.arrivalTime = arrivalTime;
+        }
     }
 
     // Helper method to check if seat is available
@@ -94,4 +115,36 @@ public class Booking {
     public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
     public String getSeatStatus() { return seatStatus; }
     public void setSeatStatus(String seatStatus) { this.seatStatus = seatStatus; }
-} 
+
+    public String getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(String departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public String getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(String arrivalTime) {
+        this.arrivalTime = arrivalTime;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+}

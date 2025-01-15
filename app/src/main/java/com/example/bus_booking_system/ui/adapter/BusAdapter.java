@@ -34,7 +34,7 @@ public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull BusViewHolder holder, int position) {
         Bus bus = getItem(position);
-        System.out.println("BUS ADAPTERRRR");
+
         holder.bind(bus);
 //        holder.bookButton.setOnClickListener(v -> {
 //            System.out.println("onBindViewHolder: setOnClickListener");

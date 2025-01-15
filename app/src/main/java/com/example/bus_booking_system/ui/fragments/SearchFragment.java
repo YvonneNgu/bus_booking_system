@@ -166,7 +166,10 @@ public class SearchFragment extends Fragment implements BusAdapter.OnBusClickLis
         intent.putExtra("bus_number", bus.getBusNumber());
         intent.putExtra("available_seats", bus.getAvailableSeats());
         intent.putExtra("bus_id", bus.getId());
-        System.out.println("MORE INTIIAL:"+ binding.dateInput.getText().toString());
+        intent.putExtra("departure_time", bus.getDepartureTime());
+        intent.putExtra("arrival_time", bus.getArrivalTime());
+        intent.putExtra("destination", bus.getDestination());
+        intent.putExtra("source", bus.getSource());
         intent.putExtra("journey_date", binding.dateInput.getText().toString());
         startActivity(intent);
     }
