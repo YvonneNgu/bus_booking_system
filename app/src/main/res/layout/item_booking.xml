@@ -28,34 +28,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Status" />
-</LinearLayout><?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:padding="16dp">
-
-<TextView
-    android:id="@+id/bookingDateTextView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Booking Date" />
-
-<TextView
-    android:id="@+id/journeyDateTextView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Journey Date" />
-
-<TextView
-    android:id="@+id/seatNumberTextView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Seat Number" />
-
-<TextView
-    android:id="@+id/statusTextView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Status" />
 </LinearLayout>
