@@ -48,6 +48,13 @@ public class SearchFragment extends Fragment implements BusAdapter.OnBusClickLis
 
     private void setupViewModel() {
         busViewModel = new ViewModelProvider(this).get(BusViewModel.class);
+
+        busViewModel.insert(new Bus("KTM001", "Sri Maju Express", "Kuala Lumpur", "Penang", "08:00", "13:00", 45.00, 40, 35, "AC"));
+        busViewModel.insert(new Bus("KTM002", "Transnasional", "Kuala Lumpur", "Johor Bahru", "09:30", "15:30", 55.00, 44, 44, "AC"));
+        busViewModel.insert(new Bus("KTM003", "Plusliner", "Penang", "Kuala Lumpur", "07:00", "12:00", 45.00, 40, 38, "AC"));
+        busViewModel.insert(new Bus("KTM004", "Aeroline", "Kuala Lumpur", "Singapore", "10:00", "16:00", 75.00, 32, 30, "AC"));
+        busViewModel.insert(new Bus("KTM005", "Nice Express", "Ipoh", "Kuala Lumpur", "06:30", "09:30", 35.00, 44, 40, "Non-AC"));
+
     }
 
     private void setupRecyclerView() {
