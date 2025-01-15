@@ -19,7 +19,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -45,16 +46,16 @@
                         android:id="@+id/busNameText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="8dp"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:padding="8dp"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/journeyDateText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:padding="8dp"/>
+                        android:padding="8dp"
+                        android:textSize="16sp" />
 
                     <View
                         android:layout_width="match_parent"
@@ -82,24 +83,24 @@
 
                             <TextView
                                 android:id="@+id/departureTimeText"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/sourceText"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=" → "
-                            android:textSize="16sp"/>
+                            android:textSize="16sp" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -115,17 +116,17 @@
 
                             <TextView
                                 android:id="@+id/arrivalTimeText"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/destinationText"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="16sp"/>
+                                android:textSize="16sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -145,9 +146,9 @@
                             android:id="@+id/fareText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:padding="8dp"
                             android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:padding="8dp"/>
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

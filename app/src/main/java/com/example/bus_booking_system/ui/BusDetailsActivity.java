@@ -156,7 +156,10 @@ public class BusDetailsActivity extends AppCompatActivity {
         // Load booked seats for the specific journey date
         busViewModel.getBookedSeatsForDate(busId, journeyDate).observe(this, seatStatus -> {
             if (seatStatus != null) {
+
                 for (int i = 0; i < seatStatus.length; i++) {
+                    System.out.println("SEAT STATUS");
+                    System.out.println(seatStatus[i]);
                     MaterialButton seatButton = seatButtons[i];
                     if (!seatStatus[i]) { // Seat is booked
                         seatButton.setEnabled(false);

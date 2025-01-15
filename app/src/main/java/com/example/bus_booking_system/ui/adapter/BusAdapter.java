@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -52,6 +53,7 @@ public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
         private final ItemBusBinding binding;
         private final Button bookButton;
 
+
         BusViewHolder(ItemBusBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
@@ -59,8 +61,6 @@ public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
         }
 
         void bind(Bus bus) {
-            System.out.println("bind: setOnClickListener");
-
             binding.busNameText.setText(bus.getBusName());
             binding.departureTimeText.setText(bus.getDepartureTime());
             binding.arrivalTimeText.setText(bus.getArrivalTime());
@@ -68,7 +68,6 @@ public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
             binding.destinationText.setText(bus.getDestination());
             binding.fareText.setText(String.format("RM%.2f", bus.getFare()));
             binding.seatsText.setText(String.format("%d seats available", bus.getAvailableSeats()));
-
             binding.bookButton.setOnClickListener(v -> listener.onBusClick(bus));
             itemView.setOnClickListener(v -> listener.onBusClick(bus));
         }
