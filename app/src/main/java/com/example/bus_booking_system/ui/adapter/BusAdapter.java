@@ -1,5 +1,6 @@
 package com.example.bus_booking_system.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -57,22 +58,20 @@ public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
 
         void bind(Bus bus) {
             binding.busNameText.setText(bus.getBusName());
-            binding.busTypeText.setText(bus.getBusType());
             binding.departureTimeText.setText(bus.getDepartureTime());
             binding.arrivalTimeText.setText(bus.getArrivalTime());
             binding.sourceText.setText(bus.getSource());
             binding.destinationText.setText(bus.getDestination());
-            binding.fareText.setText(String.format("₹%.2f", bus.getFare()));
+            binding.fareText.setText(String.format("RM%.2f", bus.getFare()));
             binding.seatsText.setText(String.format("%d seats available", bus.getAvailableSeats()));
 
-            binding.bookButton.setOnClickListener(v -> listener.onBookClick(bus));
+            binding.bookButton.setOnClickListener(v -> listener.onBusClick(bus));
             itemView.setOnClickListener(v -> listener.onBusClick(bus));
         }
     }
 
     public interface OnBusClickListener {
         void onBusClick(Bus bus);
-        void onBookClick(Bus bus);
     }
 
     private static class BusDiffCallback extends DiffUtil.ItemCallback<Bus> {
@@ -81,6 +80,7 @@ public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
             return oldItem.getId() == newItem.getId();
         }
 
+        @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(@NonNull Bus oldItem, @NonNull Bus newItem) {
             return oldItem.equals(newItem);

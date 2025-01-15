@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,11 +66,22 @@ public class BusDetailsActivity extends AppCompatActivity {
     }
 
     private void loadBusDetails() {
+        // Add logging to check received values
         int busId = getIntent().getIntExtra("bus_id", -1);
         journeyDate = getIntent().getStringExtra("journey_date");
 
+        Log.d("BusDetailsActivity", "Received bus_id: " + busId);
+        Log.d("BusDetailsActivity", "Received journey_date: " + journeyDate);
+
+        // Better validation with specific error messages
         if (busId == -1) {
-            Toast.makeText(this, "Invalid bus details", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid bus ID", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        if (journeyDate == null || journeyDate.isEmpty()) {
+            Toast.makeText(this, "Journey date is missing", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -80,18 +92,21 @@ public class BusDetailsActivity extends AppCompatActivity {
                 updateUI(bus);
                 initializeSeatGrid();
                 loadBookedSeats(bus.getId());
+            } else {
+                Toast.makeText(this, "Bus not found", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
 
     private void updateUI(Bus bus) {
         binding.busNameText.setText(bus.getBusName());
-        binding.busTypeText.setText(bus.getBusType());
+        binding.journeyDateText.setText("Journey Date: " + journeyDate);
         binding.departureTimeText.setText(bus.getDepartureTime());
         binding.arrivalTimeText.setText(bus.getArrivalTime());
         binding.sourceText.setText(bus.getSource());
         binding.destinationText.setText(bus.getDestination());
-        binding.fareText.setText(String.format("₹%.2f", bus.getFare()));
+        binding.fareText.setText(String.format("Fare: RM%.2f", bus.getFare()));
     }
 
     private void initializeSeatGrid() {
@@ -123,7 +138,8 @@ public class BusDetailsActivity extends AppCompatActivity {
     }
 
     private void loadBookedSeats(int busId) {
-        busViewModel.getSeatStatus(busId).observe(this, seatStatus -> {
+        // Load booked seats for the specific journey date
+        busViewModel.getBookedSeatsForDate(busId, journeyDate).observe(this, seatStatus -> {
             if (seatStatus != null) {
                 for (int i = 0; i < seatStatus.length; i++) {
                     MaterialButton seatButton = seatButtons[i];
@@ -132,7 +148,6 @@ public class BusDetailsActivity extends AppCompatActivity {
                         seatButton.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                     } else {
                         seatButton.setEnabled(true);
-//                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.white));
                     }
                 }
             }
@@ -149,6 +164,7 @@ public class BusDetailsActivity extends AppCompatActivity {
         selectedSeat = seatNumber;
         seatButtons[seatNumber - 1].setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_green_light));
         binding.selectedSeatText.setText("Seat " + seatNumber);
+        binding.totalFareText.setText(String.format("Total: RM%.2f", currentBus.getFare()));
         binding.proceedButton.setEnabled(true);
     }
 
@@ -163,28 +179,41 @@ public class BusDetailsActivity extends AppCompatActivity {
         binding.proceedButton.setOnClickListener(v -> proceedToBooking());
     }
 
+    /**
+     * Handles the booking process when user clicks the proceed button
+     * Flow:
+     * 1. Validates seat selection
+     * 2. Creates booking with current date and selected journey date
+     * 3. Inserts booking into database
+     * 4. Updates bus seat status
+     * 5. Shows success/failure message
+     */
     private void proceedToBooking() {
         if (selectedSeat == -1) {
             Toast.makeText(this, "Please select a seat", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Get current date for booking date
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 .format(new Date());
 
+        // Create booking with journey date from search
         Booking booking = new Booking(
                 sessionManager.getUserId(),
                 currentBus.getId(),
-                currentDate,
-                journeyDate,
+                currentDate,  // Booking date (today)
+                journeyDate, // Journey date (selected by user)
                 selectedSeat,
                 currentBus.getFare()
         );
 
+        // Insert booking with callback for success/failure
         bookingViewModel.insert(booking, new BookingRepository.BookingCallback() {
             @Override
             public void onSuccess(long bookingId) {
                 runOnUiThread(() -> {
+                    // Update bus seat status and show success message
                     busViewModel.bookSeat(currentBus.getId(), selectedSeat);
                     Toast.makeText(BusDetailsActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
                     finish();

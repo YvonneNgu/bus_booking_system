@@ -21,40 +21,40 @@ public interface BusDao {
     
     @Delete
     void delete(Bus bus);
+
+    @Query("SELECT * FROM buses")
+    LiveData<List<Bus>> getAllBuses();
     
     @Query("SELECT * FROM buses WHERE id = :id LIMIT 1")
     LiveData<Bus> getBusById(int id);
     
-    @Query("SELECT * FROM buses")
-    LiveData<List<Bus>> getAllBuses();
-    
     @Query("SELECT * FROM buses WHERE source = :source AND destination = :destination")
     LiveData<List<Bus>> searchBuses(String source, String destination);
     
-    @Query("UPDATE buses SET availableSeats = availableSeats - 1 WHERE id = :busId AND availableSeats > 0")
-    void decreaseAvailableSeats(int busId);
-    
-    @Query("UPDATE buses SET availableSeats = availableSeats + 1 WHERE id = :busId AND availableSeats < totalSeats")
-    void increaseAvailableSeats(int busId);
-    
-    @Query("SELECT availableSeats FROM buses WHERE id = :busId")
-    LiveData<Integer> getAvailableSeats(int busId);
-    
-    @Query("SELECT seatStatus FROM buses WHERE id = :busId")
-    LiveData<boolean[]> getSeatStatus(int busId);
-    
-    @Query("UPDATE buses SET seatStatus = :newSeatStatus WHERE id = :busId")
-    void updateSeatStatus(int busId, boolean[] newSeatStatus);
-    
-    @Query("SELECT DISTINCT source FROM buses ORDER BY source ASC")
+    @Query("SELECT DISTINCT source FROM buses")
     LiveData<List<String>> getAllSources();
-    
-    @Query("SELECT DISTINCT destination FROM buses ORDER BY destination ASC")
+
+    @Query("SELECT DISTINCT destination FROM buses")
     LiveData<List<String>> getAllDestinations();
     
-    @Query("SELECT DISTINCT destination FROM buses WHERE source = :selectedSource ORDER BY destination ASC")
-    LiveData<List<String>> getDestinationsForSource(String selectedSource);
+    @Query("SELECT DISTINCT destination FROM buses WHERE source = :source")
+    LiveData<List<String>> getDestinationsForSource(String source);
     
-    @Query("SELECT DISTINCT source FROM buses WHERE destination = :selectedDestination ORDER BY source ASC")
-    LiveData<List<String>> getSourcesForDestination(String selectedDestination);
+    @Query("SELECT DISTINCT source FROM buses WHERE destination = :destination")
+    LiveData<List<String>> getSourcesForDestination(String destination);
+    
+    @Query("UPDATE buses SET availableSeats = availableSeats - 1 WHERE id = :busId")
+    void decrementAvailableSeats(int busId);
+    
+    @Query("UPDATE buses SET availableSeats = availableSeats + 1 WHERE id = :busId")
+    void incrementAvailableSeats(int busId);
+
+    @Query("SELECT availableSeats FROM buses WHERE id = :busId")
+    LiveData<Integer> getAvailableSeats(int busId);
+
+    @Query("SELECT seatStatus FROM buses WHERE id = :busId")
+    LiveData<boolean[]> getSeatStatus(int busId);
+
+    @Query("UPDATE buses SET seatStatus = :seatStatus WHERE id = :busId")
+    void updateSeatStatus(int busId, boolean[] seatStatus);
 } 
