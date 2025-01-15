@@ -11,12 +11,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.bus_booking_system.data.model.Bus;
 import com.example.bus_booking_system.databinding.FragmentHomeBinding;
+import com.example.bus_booking_system.ui.adapter.BusAdapter;
 import com.example.bus_booking_system.viewmodel.BusViewModel;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private BusViewModel busViewModel;
+    private BusAdapter busAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupViewModel();
         setupUI();
+        fetchPopularRoutes();
     }
 
     private void setupViewModel() {
@@ -36,7 +40,27 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupUI() {
-        // TODO: Implement home screen UI setup
+        busAdapter = new BusAdapter(new BusAdapter.OnBusClickListener() {
+            @Override
+            public void onBusClick(Bus bus) {
+
+            }
+
+            @Override
+            public void onBookClick(Bus bus) {
+                // Handle book click
+            }
+        });
+
+        binding.popularRoutesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.popularRoutesRecyclerView.setAdapter(busAdapter);
+    }
+
+    private void fetchPopularRoutes() {
+        busViewModel.getAllBuses().observe(getViewLifecycleOwner(), buses -> {
+            // Assuming all buses are popular routes for now
+            busAdapter.submitList(buses);
+        });
     }
 
     @Override

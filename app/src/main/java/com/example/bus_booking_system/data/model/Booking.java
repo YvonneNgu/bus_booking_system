@@ -37,6 +37,18 @@ public class Booking {
         this.paymentStatus = "PENDING";
     }
 
+    public Booking(int userId, int busId, String date, String date1, int seatNumber, double totalFare, String confirmed, String pending) {
+
+        this.userId = userId;
+        this.busId = busId;
+        this.bookingDate = date;
+        this.journeyDate = date1;
+        this.seatNumber = seatNumber;
+        this.totalFare = totalFare;
+        this.status = confirmed;
+        this.paymentStatus = pending;
+    }
+
     // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

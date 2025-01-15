@@ -1,6 +1,7 @@
 package com.example.bus_booking_system.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -24,6 +25,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         sessionManager = new SessionManager(this);
+
+        // Log the current user ID
+        int userId = sessionManager.getUserId();
+        Log.d("MainActivity", "Current User ID: " + userId);
 
         // Setup Navigation
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
