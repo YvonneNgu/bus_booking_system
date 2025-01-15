@@ -34,15 +34,17 @@ public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull BusViewHolder holder, int position) {
         Bus bus = getItem(position);
+        System.out.println("BUS ADAPTERRRR");
         holder.bind(bus);
-        holder.bookButton.setOnClickListener(v -> {
-            Context context = v.getContext();
-            Intent intent = new Intent(context, BusDetailsActivity.class);
-            intent.putExtra("bus_id", bus.getId());
-            intent.putExtra("bus_number", bus.getBusNumber());
-            intent.putExtra("available_seats", bus.getAvailableSeats());
-            context.startActivity(intent);
-        });
+//        holder.bookButton.setOnClickListener(v -> {
+//            System.out.println("onBindViewHolder: setOnClickListener");
+//            Context context = v.getContext();
+//            Intent intent = new Intent(context, BusDetailsActivity.class);
+//            intent.putExtra("bus_id", bus.getId());
+//            intent.putExtra("bus_number", bus.getBusNumber());
+//            intent.putExtra("available_seats", bus.getAvailableSeats());
+//            context.startActivity(intent);
+//        });
     }
 
     class BusViewHolder extends RecyclerView.ViewHolder {
@@ -56,6 +58,8 @@ public class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {
         }
 
         void bind(Bus bus) {
+            System.out.println("bind: setOnClickListener");
+
             binding.busNameText.setText(bus.getBusName());
             binding.busTypeText.setText(bus.getBusType());
             binding.departureTimeText.setText(bus.getDepartureTime());

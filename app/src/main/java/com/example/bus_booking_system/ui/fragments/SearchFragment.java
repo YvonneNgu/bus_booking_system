@@ -130,6 +130,8 @@ public class SearchFragment extends Fragment implements BusAdapter.OnBusClickLis
                 (view, year, month, dayOfMonth) -> {
                     selectedDate.set(year, month, dayOfMonth);
                     binding.dateInput.setText(dateFormat.format(selectedDate.getTime()));
+                    System.out.println("binding.dateInput");
+                    System.out.println(binding.dateInput.getText().toString());
                 },
                 selectedDate.get(Calendar.YEAR),
                 selectedDate.get(Calendar.MONTH),
@@ -158,14 +160,20 @@ public class SearchFragment extends Fragment implements BusAdapter.OnBusClickLis
 
     @Override
     public void onBusClick(Bus bus) {
+        System.out.println("onBusClick");
         Intent intent = new Intent(requireContext(), BusDetailsActivity.class);
+
+        intent.putExtra("bus_number", bus.getBusNumber());
+        intent.putExtra("available_seats", bus.getAvailableSeats());
         intent.putExtra("bus_id", bus.getId());
+        System.out.println("MORE INTIIAL:"+ binding.dateInput.getText().toString());
         intent.putExtra("journey_date", binding.dateInput.getText().toString());
         startActivity(intent);
     }
 
     @Override
     public void onBookClick(Bus bus) {
+        System.out.println("onBookClick");
         onBusClick(bus);
     }
 

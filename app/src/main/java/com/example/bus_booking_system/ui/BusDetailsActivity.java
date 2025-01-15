@@ -67,6 +67,7 @@ public class BusDetailsActivity extends AppCompatActivity {
     private void loadBusDetails() {
         int busId = getIntent().getIntExtra("bus_id", -1);
         journeyDate = getIntent().getStringExtra("journey_date");
+        System.out.println("INITIAL DATE: " + journeyDate);
 
         if (busId == -1) {
             Toast.makeText(this, "Invalid bus details", Toast.LENGTH_SHORT).show();
@@ -172,6 +173,7 @@ public class BusDetailsActivity extends AppCompatActivity {
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 .format(new Date());
 
+        System.out.println("JourneyDateeeeeee "  + journeyDate);
         Booking booking = new Booking(
                 sessionManager.getUserId(),
                 currentBus.getId(),

@@ -41,7 +41,7 @@ public class Booking {
         this.journeyDate = journeyDate;
         this.seatNumber = seatNumber;
         this.totalFare = totalFare;
-        this.status = "PENDING";
+        this.status = "CONFIRMED";
         this.paymentStatus = "PENDING";
         this.seatStatus = "RESERVED";
     }
