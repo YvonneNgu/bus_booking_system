@@ -40,6 +40,12 @@ public interface BookingDao {
     @Query("UPDATE bookings SET paymentStatus = :paymentStatus WHERE id = :bookingId")
     void updatePaymentStatus(int bookingId, String paymentStatus);
     
+    @Query("SELECT EXISTS(SELECT 1 FROM users WHERE id = :userId LIMIT 1)")
+    boolean checkUserExists(int userId);
+    
+    @Query("SELECT EXISTS(SELECT 1 FROM buses WHERE id = :busId LIMIT 1)")
+    boolean checkBusExists(int busId);
+    
     @Query("SELECT COUNT(*) FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate AND seatNumber = :seatNumber")
     LiveData<Integer> isSeatBooked(int busId, String journeyDate, String seatNumber);
     

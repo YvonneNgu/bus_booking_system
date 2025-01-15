@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.bus_booking_system.R;
 import com.example.bus_booking_system.data.model.Booking;
 import com.example.bus_booking_system.data.model.Bus;
+import com.example.bus_booking_system.data.repository.BookingRepository;
 import com.example.bus_booking_system.databinding.ActivityBusDetailsBinding;
 import com.example.bus_booking_system.utils.SessionManager;
 import com.example.bus_booking_system.viewmodel.BookingViewModel;
@@ -180,11 +181,23 @@ public class BusDetailsActivity extends AppCompatActivity {
                 currentBus.getFare()
         );
 
-        bookingViewModel.insert(booking);
-        busViewModel.bookSeat(currentBus.getId(), selectedSeat);
+        bookingViewModel.insert(booking, new BookingRepository.BookingCallback() {
+            @Override
+            public void onSuccess(long bookingId) {
+                runOnUiThread(() -> {
+                    busViewModel.bookSeat(currentBus.getId(), selectedSeat);
+                    Toast.makeText(BusDetailsActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }
 
-        Toast.makeText(this, "Booking successful!", Toast.LENGTH_SHORT).show();
-        finish();
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    Toast.makeText(BusDetailsActivity.this, "Booking failed: " + error, Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override

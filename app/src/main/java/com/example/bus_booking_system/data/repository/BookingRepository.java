@@ -38,8 +38,25 @@ public class BookingRepository {
         return bookingDao.getBookingsByBusAndDate(busId, journeyDate);
     }
 
-    public void insert(Booking booking) {
-        executorService.execute(() -> bookingDao.insert(booking));
+    public void insert(Booking booking, BookingCallback callback) {
+        executorService.execute(() -> {
+            try {
+                // Check if user and bus exist
+                if (!bookingDao.checkUserExists(booking.getUserId())) {
+                    callback.onError("User not found");
+                    return;
+                }
+                if (!bookingDao.checkBusExists(booking.getBusId())) {
+                    callback.onError("Bus not found");
+                    return;
+                }
+                
+                long id = bookingDao.insert(booking);
+                callback.onSuccess(id);
+            } catch (Exception e) {
+                callback.onError(e.getMessage());
+            }
+        });
     }
 
     public void update(Booking booking) {
@@ -56,5 +73,10 @@ public class BookingRepository {
 
     public void updatePaymentStatus(int bookingId, String paymentStatus) {
         executorService.execute(() -> bookingDao.updatePaymentStatus(bookingId, paymentStatus));
+    }
+
+    public interface BookingCallback {
+        void onSuccess(long bookingId);
+        void onError(String error);
     }
 } 

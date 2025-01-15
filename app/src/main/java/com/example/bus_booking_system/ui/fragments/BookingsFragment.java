@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.bus_booking_system.data.model.Booking;
 import com.example.bus_booking_system.databinding.FragmentBookingsBinding;
 import com.example.bus_booking_system.ui.adapter.BookingsAdapter;
 import com.example.bus_booking_system.utils.SessionManager;
@@ -23,9 +23,7 @@ public class BookingsFragment extends Fragment {
     private FragmentBookingsBinding binding;
     private BookingViewModel bookingViewModel;
     private SessionManager sessionManager;
-
     private BookingsAdapter bookingsAdapter;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,15 +40,6 @@ public class BookingsFragment extends Fragment {
 
     private void setupViewModel() {
         bookingViewModel = new ViewModelProvider(this).get(BookingViewModel.class);
-        bookingViewModel.insert(new Booking(
-            2,  // userId
-            2,  // busId
-            "2025-01-14",  // bookingDate
-            "2025-01-21",  // journeyDate
-            5,  // seatNumber
-            55.00  // fare
-        ));
-
         sessionManager = new SessionManager(requireContext());
     }
 
@@ -66,7 +55,6 @@ public class BookingsFragment extends Fragment {
             binding.bookingsRecyclerView.setVisibility(bookings.isEmpty() ? View.GONE : View.VISIBLE);
         });
     }
-
 
     @Override
     public void onDestroyView() {
