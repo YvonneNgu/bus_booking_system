@@ -9,7 +9,7 @@
         android:id="@+id/bookingDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Booking Date" />
+        android:text="booking date" />
 
     <TextView
         android:id="@+id/journeyDateTextView"

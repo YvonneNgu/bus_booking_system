@@ -59,10 +59,10 @@ public class BookingsAdapter extends RecyclerView.Adapter<BookingsAdapter.Bookin
         }
 
         public void bind(Booking booking) {
-            bookingDateTextView.setText(booking.getBookingDate());
-            journeyDateTextView.setText(booking.getJourneyDate());
-            seatNumberTextView.setText(String.valueOf(booking.getSeatNumber()));
-            statusTextView.setText(booking.getStatus());
+            bookingDateTextView.setText("Booking Date       : "+booking.getBookingDate());
+            journeyDateTextView.setText("Journey Date       : "+booking.getJourneyDate());
+            seatNumberTextView.setText("Seat Number       : "+ booking.getSeatNumber());
+                statusTextView.setText("Status                   : "+booking.getStatus());
         }
     }
 }

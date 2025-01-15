@@ -25,6 +25,11 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.SeatSelectionActivity"
+            android:exported="false" />
+
+
+        <activity
             android:name=".ui.MainActivity"
             android:exported="false" />
 
