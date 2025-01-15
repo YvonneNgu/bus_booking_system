@@ -45,4 +45,16 @@ public interface BusDao {
     
     @Query("UPDATE buses SET seatStatus = :newSeatStatus WHERE id = :busId")
     void updateSeatStatus(int busId, boolean[] newSeatStatus);
+    
+    @Query("SELECT DISTINCT source FROM buses ORDER BY source ASC")
+    LiveData<List<String>> getAllSources();
+    
+    @Query("SELECT DISTINCT destination FROM buses ORDER BY destination ASC")
+    LiveData<List<String>> getAllDestinations();
+    
+    @Query("SELECT DISTINCT destination FROM buses WHERE source = :selectedSource ORDER BY destination ASC")
+    LiveData<List<String>> getDestinationsForSource(String selectedSource);
+    
+    @Query("SELECT DISTINCT source FROM buses WHERE destination = :selectedDestination ORDER BY source ASC")
+    LiveData<List<String>> getSourcesForDestination(String selectedDestination);
 } 
