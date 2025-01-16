@@ -206,7 +206,6 @@ public class SearchFragment extends Fragment implements BusAdapter.OnBusClickLis
         intent.putExtra("arrival_time", bus.getArrivalTime());
         intent.putExtra("destination", bus.getDestination());
         intent.putExtra("source", bus.getSource());
-        intent.putExtra("journey_date", binding.dateInput.getText().toString());
         intent.putExtra("journey_date", selectedJourneyDate);
 
         // Add logging to verify the data being passed

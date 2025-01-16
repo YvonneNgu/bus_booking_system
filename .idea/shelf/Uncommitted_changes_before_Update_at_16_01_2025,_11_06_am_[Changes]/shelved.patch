@@ -1,0 +1,1177 @@
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM_[Changes]/shelved.patch	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,936 +0,0 @@
+-Index: app/src/main/java/com/example/bus_booking_system/data/database/BusDao.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.data.database;\r\n\r\nimport androidx.lifecycle.LiveData;\r\nimport androidx.room.Dao;\r\nimport androidx.room.Delete;\r\nimport androidx.room.Insert;\r\nimport androidx.room.Query;\r\nimport androidx.room.Update;\r\n\r\nimport com.example.bus_booking_system.data.model.Bus;\r\n\r\nimport java.util.List;\r\n\r\n@Dao\r\npublic interface BusDao {\r\n    @Insert\r\n    long insert(Bus bus);\r\n    \r\n    @Update\r\n    void update(Bus bus);\r\n    \r\n    @Delete\r\n    void delete(Bus bus);\r\n    \r\n    @Query(\"SELECT * FROM buses WHERE id = :id LIMIT 1\")\r\n    LiveData<Bus> getBusById(int id);\r\n    \r\n    @Query(\"SELECT * FROM buses\")\r\n    LiveData<List<Bus>> getAllBuses();\r\n    \r\n    @Query(\"SELECT * FROM buses WHERE source = :source AND destination = :destination\")\r\n    LiveData<List<Bus>> searchBuses(String source, String destination);\r\n    \r\n    @Query(\"UPDATE buses SET availableSeats = availableSeats - 1 WHERE id = :busId AND availableSeats > 0\")\r\n    void decreaseAvailableSeats(int busId);\r\n    \r\n    @Query(\"UPDATE buses SET availableSeats = availableSeats + 1 WHERE id = :busId AND availableSeats < totalSeats\")\r\n    void increaseAvailableSeats(int busId);\r\n    \r\n    @Query(\"SELECT availableSeats FROM buses WHERE id = :busId\")\r\n    LiveData<Integer> getAvailableSeats(int busId);\r\n    \r\n    @Query(\"SELECT seatStatus FROM buses WHERE id = :busId\")\r\n    LiveData<boolean[]> getSeatStatus(int busId);\r\n    \r\n    @Query(\"UPDATE buses SET seatStatus = :newSeatStatus WHERE id = :busId\")\r\n    void updateSeatStatus(int busId, boolean[] newSeatStatus);\r\n    \r\n    @Query(\"SELECT DISTINCT source FROM buses ORDER BY source ASC\")\r\n    LiveData<List<String>> getAllSources();\r\n    \r\n    @Query(\"SELECT DISTINCT destination FROM buses ORDER BY destination ASC\")\r\n    LiveData<List<String>> getAllDestinations();\r\n    \r\n    @Query(\"SELECT DISTINCT destination FROM buses WHERE source = :selectedSource ORDER BY destination ASC\")\r\n    LiveData<List<String>> getDestinationsForSource(String selectedSource);\r\n    \r\n    @Query(\"SELECT DISTINCT source FROM buses WHERE destination = :selectedDestination ORDER BY source ASC\")\r\n    LiveData<List<String>> getSourcesForDestination(String selectedDestination);\r\n} 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/data/database/BusDao.java b/app/src/main/java/com/example/bus_booking_system/data/database/BusDao.java
+---- a/app/src/main/java/com/example/bus_booking_system/data/database/BusDao.java	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/java/com/example/bus_booking_system/data/database/BusDao.java	(date 1736948259691)
+-@@ -21,40 +21,40 @@
+-     
+-     @Delete
+-     void delete(Bus bus);
+--    
+--    @Query("SELECT * FROM buses WHERE id = :id LIMIT 1")
+--    LiveData<Bus> getBusById(int id);
+--    
+-+
+-     @Query("SELECT * FROM buses")
+-     LiveData<List<Bus>> getAllBuses();
+-     
+-+    @Query("SELECT * FROM buses WHERE id = :id LIMIT 1")
+-+    LiveData<Bus> getBusById(int id);
+-+    
+-     @Query("SELECT * FROM buses WHERE source = :source AND destination = :destination")
+-     LiveData<List<Bus>> searchBuses(String source, String destination);
+-     
+--    @Query("UPDATE buses SET availableSeats = availableSeats - 1 WHERE id = :busId AND availableSeats > 0")
+--    void decreaseAvailableSeats(int busId);
+-+    @Query("SELECT DISTINCT source FROM buses")
+-+    LiveData<List<String>> getAllSources();
+-+
+-+    @Query("SELECT DISTINCT destination FROM buses")
+-+    LiveData<List<String>> getAllDestinations();
+-+    
+-+    @Query("SELECT DISTINCT destination FROM buses WHERE source = :source")
+-+    LiveData<List<String>> getDestinationsForSource(String source);
+-+    
+-+    @Query("SELECT DISTINCT source FROM buses WHERE destination = :destination")
+-+    LiveData<List<String>> getSourcesForDestination(String destination);
+-     
+--    @Query("UPDATE buses SET availableSeats = availableSeats + 1 WHERE id = :busId AND availableSeats < totalSeats")
+--    void increaseAvailableSeats(int busId);
+-+    @Query("UPDATE buses SET availableSeats = availableSeats - 1 WHERE id = :busId")
+-+    void decrementAvailableSeats(int busId);
+-     
+-+    @Query("UPDATE buses SET availableSeats = availableSeats + 1 WHERE id = :busId")
+-+    void incrementAvailableSeats(int busId);
+-+
+-     @Query("SELECT availableSeats FROM buses WHERE id = :busId")
+-     LiveData<Integer> getAvailableSeats(int busId);
+--    
+-+
+-     @Query("SELECT seatStatus FROM buses WHERE id = :busId")
+-     LiveData<boolean[]> getSeatStatus(int busId);
+--    
+--    @Query("UPDATE buses SET seatStatus = :newSeatStatus WHERE id = :busId")
+--    void updateSeatStatus(int busId, boolean[] newSeatStatus);
+--    
+--    @Query("SELECT DISTINCT source FROM buses ORDER BY source ASC")
+--    LiveData<List<String>> getAllSources();
+--    
+--    @Query("SELECT DISTINCT destination FROM buses ORDER BY destination ASC")
+--    LiveData<List<String>> getAllDestinations();
+--    
+--    @Query("SELECT DISTINCT destination FROM buses WHERE source = :selectedSource ORDER BY destination ASC")
+--    LiveData<List<String>> getDestinationsForSource(String selectedSource);
+--    
+--    @Query("SELECT DISTINCT source FROM buses WHERE destination = :selectedDestination ORDER BY source ASC")
+--    LiveData<List<String>> getSourcesForDestination(String selectedDestination);
+-+
+-+    @Query("UPDATE buses SET seatStatus = :seatStatus WHERE id = :busId")
+-+    void updateSeatStatus(int busId, boolean[] seatStatus);
+- } 
+-\ No newline at end of file
+-Index: app/src/main/java/com/example/bus_booking_system/ui/BusDetailsActivity.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.ui;\r\n\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.content.res.TypedArray;\r\nimport android.os.Bundle;\r\nimport android.util.TypedValue;\r\nimport android.view.MenuItem;\r\nimport android.view.View;\r\nimport android.widget.GridLayout;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.lifecycle.ViewModelProvider;\r\n\r\nimport com.example.bus_booking_system.R;\r\nimport com.example.bus_booking_system.data.model.Booking;\r\nimport com.example.bus_booking_system.data.model.Bus;\r\nimport com.example.bus_booking_system.data.repository.BookingRepository;\r\nimport com.example.bus_booking_system.databinding.ActivityBusDetailsBinding;\r\nimport com.example.bus_booking_system.utils.SessionManager;\r\nimport com.example.bus_booking_system.viewmodel.BookingViewModel;\r\nimport com.example.bus_booking_system.viewmodel.BusViewModel;\r\nimport com.google.android.material.button.MaterialButton;\r\n\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.Date;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\n\r\npublic class BusDetailsActivity extends AppCompatActivity {\r\n    private ActivityBusDetailsBinding binding;\r\n    private BusViewModel busViewModel;\r\n    private BookingViewModel bookingViewModel;\r\n    private SessionManager sessionManager;\r\n    private Bus currentBus;\r\n    private String journeyDate;\r\n    private int selectedSeat = -1;\r\n    private MaterialButton[] seatButtons;\r\n    private List<Integer> bookedSeats;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        binding = ActivityBusDetailsBinding.inflate(getLayoutInflater());\r\n        setContentView(binding.getRoot());\r\n\r\n        // Set up toolbar\r\n        setSupportActionBar(binding.toolbar);\r\n        if (getSupportActionBar() != null) {\r\n            getSupportActionBar().setDisplayHomeAsUpEnabled(true);\r\n            getSupportActionBar().setTitle(\"Select Seat\");\r\n        }\r\n\r\n        setupViewModels();\r\n        loadBusDetails();\r\n        setupClickListeners();\r\n    }\r\n\r\n    private void setupViewModels() {\r\n        busViewModel = new ViewModelProvider(this).get(BusViewModel.class);\r\n        bookingViewModel = new ViewModelProvider(this).get(BookingViewModel.class);\r\n        sessionManager = new SessionManager(this);\r\n    }\r\n\r\n    private void loadBusDetails() {\r\n        int busId = getIntent().getIntExtra(\"bus_id\", -1);\r\n        journeyDate = getIntent().getStringExtra(\"journey_date\");\r\n\r\n        if (busId == -1) {\r\n            Toast.makeText(this, \"Invalid bus details\", Toast.LENGTH_SHORT).show();\r\n            finish();\r\n            return;\r\n        }\r\n\r\n        busViewModel.getBusById(busId).observe(this, bus -> {\r\n            if (bus != null) {\r\n                currentBus = bus;\r\n                updateUI(bus);\r\n                initializeSeatGrid();\r\n                loadBookedSeats(bus.getId());\r\n            }\r\n        });\r\n    }\r\n\r\n    private void updateUI(Bus bus) {\r\n        binding.busNameText.setText(bus.getBusName());\r\n        binding.busTypeText.setText(bus.getBusType());\r\n        binding.departureTimeText.setText(bus.getDepartureTime());\r\n        binding.arrivalTimeText.setText(bus.getArrivalTime());\r\n        binding.sourceText.setText(bus.getSource());\r\n        binding.destinationText.setText(bus.getDestination());\r\n        binding.fareText.setText(String.format(\"₹%.2f\", bus.getFare()));\r\n    }\r\n\r\n    private void initializeSeatGrid() {\r\n        GridLayout seatGrid = binding.seatsContainer;\r\n        seatGrid.removeAllViews(); // Clear existing views\r\n        \r\n        int totalSeats = currentBus != null ? currentBus.getTotalSeats() : 30;\r\n        seatButtons = new MaterialButton[totalSeats];\r\n        \r\n        for (int i = 0; i < totalSeats; i++) {\r\n            MaterialButton seatButton = new MaterialButton(this);\r\n            seatButton.setText(String.valueOf(i + 1));\r\n            seatButton.setTag(i + 1);\r\n            \r\n            // Set layout parameters for the button\r\n            GridLayout.LayoutParams params = new GridLayout.LayoutParams();\r\n            params.width = GridLayout.LayoutParams.WRAP_CONTENT;\r\n            params.height = GridLayout.LayoutParams.WRAP_CONTENT;\r\n            params.setMargins(8, 8, 8, 8);\r\n            seatButton.setLayoutParams(params);\r\n            \r\n            // Add click listener\r\n            final int seatNumber = i + 1;\r\n            seatButton.setOnClickListener(v -> onSeatSelected(seatNumber));\r\n            \r\n            seatButtons[i] = seatButton;\r\n            seatGrid.addView(seatButton);\r\n        }\r\n    }\r\n\r\n    private void loadBookedSeats(int busId) {\r\n        busViewModel.getSeatStatus(busId).observe(this, seatStatus -> {\r\n            if (seatStatus != null) {\r\n                for (int i = 0; i < seatStatus.length; i++) {\r\n                    MaterialButton seatButton = seatButtons[i];\r\n                    if (!seatStatus[i]) { // Seat is booked\r\n                        seatButton.setEnabled(false);\r\n                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));\r\n                    } else {\r\n                        seatButton.setEnabled(true);\r\n//                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.white));\r\n                    }\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    private void onSeatSelected(int seatNumber) {\r\n        // Reset the background color of the previously selected seat\r\n        if (selectedSeat != -1) {\r\n            seatButtons[selectedSeat - 1].setBackgroundColor(getThemeColor(this, com.google.android.material.R.attr.colorPrimary));\r\n        }\r\n\r\n        // Set the new selected seat\r\n        selectedSeat = seatNumber;\r\n        seatButtons[seatNumber - 1].setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_green_light));\r\n        binding.selectedSeatText.setText(\"Seat \" + seatNumber);\r\n        binding.proceedButton.setEnabled(true);\r\n    }\r\n\r\n    public int getThemeColor(Context context, int colorAttribute) {\r\n        TypedValue typedValue = new TypedValue();\r\n        context.getTheme().resolveAttribute(colorAttribute, typedValue, true);\r\n        return typedValue.data;\r\n    }\r\n\r\n\r\n    private void setupClickListeners() {\r\n        binding.proceedButton.setOnClickListener(v -> proceedToBooking());\r\n    }\r\n\r\n    private void proceedToBooking() {\r\n        if (selectedSeat == -1) {\r\n            Toast.makeText(this, \"Please select a seat\", Toast.LENGTH_SHORT).show();\r\n            return;\r\n        }\r\n\r\n        String currentDate = new SimpleDateFormat(\"dd/MM/yyyy\", Locale.getDefault())\r\n                .format(new Date());\r\n\r\n        Booking booking = new Booking(\r\n                sessionManager.getUserId(),\r\n                currentBus.getId(),\r\n                currentDate,\r\n                journeyDate,\r\n                selectedSeat,\r\n                currentBus.getFare()\r\n        );\r\n\r\n        bookingViewModel.insert(booking, new BookingRepository.BookingCallback() {\r\n            @Override\r\n            public void onSuccess(long bookingId) {\r\n                runOnUiThread(() -> {\r\n                    busViewModel.bookSeat(currentBus.getId(), selectedSeat);\r\n                    Toast.makeText(BusDetailsActivity.this, \"Booking successful!\", Toast.LENGTH_SHORT).show();\r\n                    finish();\r\n                });\r\n            }\r\n\r\n            @Override\r\n            public void onError(String error) {\r\n                runOnUiThread(() -> {\r\n                    Toast.makeText(BusDetailsActivity.this, \"Booking failed: \" + error, Toast.LENGTH_SHORT).show();\r\n                });\r\n            }\r\n        });\r\n    }\r\n\r\n    @Override\r\n    public boolean onOptionsItemSelected(MenuItem item) {\r\n        if (item.getItemId() == android.R.id.home) {\r\n            onBackPressed();\r\n            return true;\r\n        }\r\n        return super.onOptionsItemSelected(item);\r\n    }\r\n} 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/ui/BusDetailsActivity.java b/app/src/main/java/com/example/bus_booking_system/ui/BusDetailsActivity.java
+---- a/app/src/main/java/com/example/bus_booking_system/ui/BusDetailsActivity.java	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/java/com/example/bus_booking_system/ui/BusDetailsActivity.java	(date 1736948259637)
+-@@ -68,8 +68,9 @@
+-         int busId = getIntent().getIntExtra("bus_id", -1);
+-         journeyDate = getIntent().getStringExtra("journey_date");
+- 
+--        if (busId == -1) {
+--            Toast.makeText(this, "Invalid bus details", Toast.LENGTH_SHORT).show();
+-+        // Validate bus ID and journey date
+-+        if (busId == -1 || journeyDate == null || journeyDate.isEmpty()) {
+-+            Toast.makeText(this, "Invalid bus details or journey date", Toast.LENGTH_SHORT).show();
+-             finish();
+-             return;
+-         }
+-@@ -80,18 +81,21 @@
+-                 updateUI(bus);
+-                 initializeSeatGrid();
+-                 loadBookedSeats(bus.getId());
+-+            } else {
+-+                Toast.makeText(this, "Bus not found", Toast.LENGTH_SHORT).show();
+-+                finish();
+-             }
+-         });
+-     }
+- 
+-     private void updateUI(Bus bus) {
+-         binding.busNameText.setText(bus.getBusName());
+--        binding.busTypeText.setText(bus.getBusType());
+-+        binding.journeyDateText.setText("Journey Date: " + journeyDate);
+-         binding.departureTimeText.setText(bus.getDepartureTime());
+-         binding.arrivalTimeText.setText(bus.getArrivalTime());
+-         binding.sourceText.setText(bus.getSource());
+-         binding.destinationText.setText(bus.getDestination());
+--        binding.fareText.setText(String.format("₹%.2f", bus.getFare()));
+-+        binding.fareText.setText(String.format("Fare: RM%.2f", bus.getFare()));
+-     }
+- 
+-     private void initializeSeatGrid() {
+-@@ -123,7 +127,8 @@
+-     }
+- 
+-     private void loadBookedSeats(int busId) {
+--        busViewModel.getSeatStatus(busId).observe(this, seatStatus -> {
+-+        // Load booked seats for the specific journey date
+-+        busViewModel.getBookedSeatsForDate(busId, journeyDate).observe(this, seatStatus -> {
+-             if (seatStatus != null) {
+-                 for (int i = 0; i < seatStatus.length; i++) {
+-                     MaterialButton seatButton = seatButtons[i];
+-@@ -132,7 +137,6 @@
+-                         seatButton.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+-                     } else {
+-                         seatButton.setEnabled(true);
+--//                        seatButton.setBackgroundColor(getResources().getColor(android.R.color.white));
+-                     }
+-                 }
+-             }
+-@@ -149,6 +153,7 @@
+-         selectedSeat = seatNumber;
+-         seatButtons[seatNumber - 1].setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_green_light));
+-         binding.selectedSeatText.setText("Seat " + seatNumber);
+-+        binding.totalFareText.setText(String.format("Total: RM%.2f", currentBus.getFare()));
+-         binding.proceedButton.setEnabled(true);
+-     }
+- 
+-@@ -163,28 +168,41 @@
+-         binding.proceedButton.setOnClickListener(v -> proceedToBooking());
+-     }
+- 
+-+    /**
+-+     * Handles the booking process when user clicks the proceed button
+-+     * Flow:
+-+     * 1. Validates seat selection
+-+     * 2. Creates booking with current date and selected journey date
+-+     * 3. Inserts booking into database
+-+     * 4. Updates bus seat status
+-+     * 5. Shows success/failure message
+-+     */
+-     private void proceedToBooking() {
+-         if (selectedSeat == -1) {
+-             Toast.makeText(this, "Please select a seat", Toast.LENGTH_SHORT).show();
+-             return;
+-         }
+- 
+-+        // Get current date for booking date
+-         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+-                 .format(new Date());
+- 
+-+        // Create booking with journey date from search
+-         Booking booking = new Booking(
+-                 sessionManager.getUserId(),
+-                 currentBus.getId(),
+--                currentDate,
+--                journeyDate,
+-+                currentDate,  // Booking date (today)
+-+                journeyDate, // Journey date (selected by user)
+-                 selectedSeat,
+-                 currentBus.getFare()
+-         );
+- 
+-+        // Insert booking with callback for success/failure
+-         bookingViewModel.insert(booking, new BookingRepository.BookingCallback() {
+-             @Override
+-             public void onSuccess(long bookingId) {
+-                 runOnUiThread(() -> {
+-+                    // Update bus seat status and show success message
+-                     busViewModel.bookSeat(currentBus.getId(), selectedSeat);
+-                     Toast.makeText(BusDetailsActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
+-                     finish();
+-Index: app/src/main/java/com/example/bus_booking_system/ui/adapter/BusAdapter.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.ui.adapter;\r\n\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.view.LayoutInflater;\r\nimport android.view.ViewGroup;\r\nimport android.widget.Button;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.recyclerview.widget.DiffUtil;\r\nimport androidx.recyclerview.widget.ListAdapter;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.example.bus_booking_system.data.model.Bus;\r\nimport com.example.bus_booking_system.databinding.ItemBusBinding;\r\nimport com.example.bus_booking_system.ui.BusDetailsActivity;\r\n\r\npublic class BusAdapter extends ListAdapter<Bus, BusAdapter.BusViewHolder> {\r\n    private final OnBusClickListener listener;\r\n\r\n    public BusAdapter(OnBusClickListener listener) {\r\n        super(new BusDiffCallback());\r\n        this.listener = listener;\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public BusViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\r\n        ItemBusBinding binding = ItemBusBinding.inflate(\r\n                LayoutInflater.from(parent.getContext()), parent, false);\r\n        return new BusViewHolder(binding);\r\n    }\r\n\r\n    @Override\r\n    public void onBindViewHolder(@NonNull BusViewHolder holder, int position) {\r\n        Bus bus = getItem(position);\r\n        holder.bind(bus);\r\n        holder.bookButton.setOnClickListener(v -> {\r\n            Context context = v.getContext();\r\n            Intent intent = new Intent(context, BusDetailsActivity.class);\r\n            intent.putExtra(\"bus_id\", bus.getId());\r\n            intent.putExtra(\"bus_number\", bus.getBusNumber());\r\n            intent.putExtra(\"available_seats\", bus.getAvailableSeats());\r\n            context.startActivity(intent);\r\n        });\r\n    }\r\n\r\n    class BusViewHolder extends RecyclerView.ViewHolder {\r\n        private final ItemBusBinding binding;\r\n        private final Button bookButton;\r\n\r\n        BusViewHolder(ItemBusBinding binding) {\r\n            super(binding.getRoot());\r\n            this.binding = binding;\r\n            bookButton = binding.bookButton;\r\n        }\r\n\r\n        void bind(Bus bus) {\r\n            binding.busNameText.setText(bus.getBusName());\r\n            binding.busTypeText.setText(bus.getBusType());\r\n            binding.departureTimeText.setText(bus.getDepartureTime());\r\n            binding.arrivalTimeText.setText(bus.getArrivalTime());\r\n            binding.sourceText.setText(bus.getSource());\r\n            binding.destinationText.setText(bus.getDestination());\r\n            binding.fareText.setText(String.format(\"₹%.2f\", bus.getFare()));\r\n            binding.seatsText.setText(String.format(\"%d seats available\", bus.getAvailableSeats()));\r\n\r\n            binding.bookButton.setOnClickListener(v -> listener.onBookClick(bus));\r\n            itemView.setOnClickListener(v -> listener.onBusClick(bus));\r\n        }\r\n    }\r\n\r\n    public interface OnBusClickListener {\r\n        void onBusClick(Bus bus);\r\n        void onBookClick(Bus bus);\r\n    }\r\n\r\n    private static class BusDiffCallback extends DiffUtil.ItemCallback<Bus> {\r\n        @Override\r\n        public boolean areItemsTheSame(@NonNull Bus oldItem, @NonNull Bus newItem) {\r\n            return oldItem.getId() == newItem.getId();\r\n        }\r\n\r\n        @Override\r\n        public boolean areContentsTheSame(@NonNull Bus oldItem, @NonNull Bus newItem) {\r\n            return oldItem.equals(newItem);\r\n        }\r\n    }\r\n} 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/ui/adapter/BusAdapter.java b/app/src/main/java/com/example/bus_booking_system/ui/adapter/BusAdapter.java
+---- a/app/src/main/java/com/example/bus_booking_system/ui/adapter/BusAdapter.java	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/java/com/example/bus_booking_system/ui/adapter/BusAdapter.java	(date 1736948259670)
+-@@ -57,12 +57,11 @@
+- 
+-         void bind(Bus bus) {
+-             binding.busNameText.setText(bus.getBusName());
+--            binding.busTypeText.setText(bus.getBusType());
+-             binding.departureTimeText.setText(bus.getDepartureTime());
+-             binding.arrivalTimeText.setText(bus.getArrivalTime());
+-             binding.sourceText.setText(bus.getSource());
+-             binding.destinationText.setText(bus.getDestination());
+--            binding.fareText.setText(String.format("₹%.2f", bus.getFare()));
+-+            binding.fareText.setText(String.format("RM%.2f", bus.getFare()));
+-             binding.seatsText.setText(String.format("%d seats available", bus.getAvailableSeats()));
+- 
+-             binding.bookButton.setOnClickListener(v -> listener.onBookClick(bus));
+-Index: app/src/main/java/com/example/bus_booking_system/viewmodel/BusViewModel.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.viewmodel;\r\n\r\nimport android.app.Application;\r\n\r\nimport androidx.lifecycle.AndroidViewModel;\r\nimport androidx.lifecycle.LiveData;\r\n\r\nimport com.example.bus_booking_system.data.model.Bus;\r\nimport com.example.bus_booking_system.data.repository.BusRepository;\r\n\r\nimport java.util.List;\r\n\r\npublic class BusViewModel extends AndroidViewModel {\r\n    private BusRepository repository;\r\n    private LiveData<List<Bus>> allBuses;\r\n\r\n    public BusViewModel(Application application) {\r\n        super(application);\r\n        repository = new BusRepository(application);\r\n        allBuses = repository.getAllBuses();\r\n    }\r\n\r\n    public LiveData<List<Bus>> getAllBuses() {\r\n        return allBuses;\r\n    }\r\n\r\n    public LiveData<Bus> getBusById(int id) {\r\n        return repository.getBusById(id);\r\n    }\r\n\r\n    public LiveData<List<Bus>> searchBuses(String source, String destination) {\r\n        return repository.searchBuses(source, destination);\r\n    }\r\n\r\n    public void insert(Bus bus) {\r\n        repository.insert(bus);\r\n    }\r\n\r\n    public void update(Bus bus) {\r\n        repository.update(bus);\r\n    }\r\n\r\n    public void delete(Bus bus) {\r\n        repository.delete(bus);\r\n    }\r\n\r\n    public void decreaseAvailableSeats(int busId) {\r\n        repository.decreaseAvailableSeats(busId);\r\n    }\r\n\r\n    public void increaseAvailableSeats(int busId) {\r\n        repository.increaseAvailableSeats(busId);\r\n    }\r\n\r\n    public LiveData<Integer> getAvailableSeats(int busId) {\r\n        return repository.getAvailableSeats(busId);\r\n    }\r\n\r\n    public LiveData<boolean[]> getSeatStatus(int busId) {\r\n        return repository.getSeatStatus(busId);\r\n    }\r\n\r\n    public void bookSeat(int busId, int seatNumber) {\r\n        repository.bookSeat(busId, seatNumber);\r\n    }\r\n\r\n    public void releaseSeat(int busId, int seatNumber) {\r\n        repository.releaseSeat(busId, seatNumber);\r\n    }\r\n\r\n    public LiveData<List<String>> getAllSources() {\r\n        return repository.getAllSources();\r\n    }\r\n\r\n    public LiveData<List<String>> getAllDestinations() {\r\n        return repository.getAllDestinations();\r\n    }\r\n\r\n    public LiveData<List<String>> getDestinationsForSource(String source) {\r\n        return repository.getDestinationsForSource(source);\r\n    }\r\n    \r\n    public LiveData<List<String>> getSourcesForDestination(String destination) {\r\n        return repository.getSourcesForDestination(destination);\r\n    }\r\n} 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/viewmodel/BusViewModel.java b/app/src/main/java/com/example/bus_booking_system/viewmodel/BusViewModel.java
+---- a/app/src/main/java/com/example/bus_booking_system/viewmodel/BusViewModel.java	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/java/com/example/bus_booking_system/viewmodel/BusViewModel.java	(date 1736948715216)
+-@@ -4,9 +4,11 @@
+- 
+- import androidx.lifecycle.AndroidViewModel;
+- import androidx.lifecycle.LiveData;
+-+import androidx.lifecycle.Transformations;
+- 
+- import com.example.bus_booking_system.data.model.Bus;
+- import com.example.bus_booking_system.data.repository.BusRepository;
+-+import com.example.bus_booking_system.data.model.Booking;
+- 
+- import java.util.List;
+- 
+-@@ -83,4 +85,40 @@
+-     public LiveData<List<String>> getSourcesForDestination(String destination) {
+-         return repository.getSourcesForDestination(destination);
+-     }
+-+
+-+    /**
+-+     * Get the seat availability status for a specific bus on a journey date
+-+     * @param busId The ID of the bus to check
+-+     * @param journeyDate The date of travel in dd/MM/yyyy format
+-+     * @return LiveData containing boolean array where true means seat is available
+-+     */
+-+    public LiveData<boolean[]> getBookedSeatsForDate(int busId, String journeyDate) {
+-+        // First get the bus's total seat status
+-+        LiveData<boolean[]> seatStatus = repository.getSeatStatus(busId);
+-+        
+-+        // Then get bookings for this date to mark booked seats
+-+        LiveData<List<Booking>> bookings = repository.getBookingsByBusAndDate(busId, journeyDate);
+-+        
+-+        // Combine the two LiveData sources to create the final seat status
+-+        return Transformations.switchMap(seatStatus, status -> 
+-+            Transformations.map(bookings, dateBookings -> {
+-+                if (status == null) return null;
+-+                
+-+                // Create a copy of the original seat status
+-+                boolean[] finalStatus = status.clone();
+-+                
+-+                // Mark seats as unavailable based on bookings
+-+                if (dateBookings != null) {
+-+                    for (Booking booking : dateBookings) {
+-+                        int seatNumber = booking.getSeatNumber();
+-+                        if (seatNumber > 0 && seatNumber <= finalStatus.length) {
+-+                            finalStatus[seatNumber - 1] = false; // Mark as booked
+-+                        }
+-+                    }
+-+                }
+-+                
+-+                return finalStatus;
+-+            })
+-+        );
+-+    }
+- } 
+-\ No newline at end of file
+-Index: app/src/main/res/layout/fragment_search.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\">\r\n\r\n    <com.google.android.material.appbar.AppBarLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"@android:color/transparent\"\r\n        app:elevation=\"0dp\">\r\n\r\n        <androidx.cardview.widget.CardView\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_margin=\"16dp\"\r\n            app:cardCornerRadius=\"8dp\"\r\n            app:cardElevation=\"4dp\">\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:orientation=\"vertical\"\r\n                android:padding=\"16dp\">\r\n\r\n                <com.google.android.material.textfield.TextInputLayout\r\n                    android:id=\"@+id/sourceLayout\"\r\n                    style=\"@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginBottom=\"8dp\"\r\n                    android:hint=\"From\">\r\n\r\n                    <AutoCompleteTextView\r\n                        android:id=\"@+id/sourceInput\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:inputType=\"none\"/>\r\n\r\n                </com.google.android.material.textfield.TextInputLayout>\r\n\r\n                <com.google.android.material.textfield.TextInputLayout\r\n                    android:id=\"@+id/destinationLayout\"\r\n                    style=\"@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginBottom=\"8dp\"\r\n                    android:hint=\"To\">\r\n\r\n                    <AutoCompleteTextView\r\n                        android:id=\"@+id/destinationInput\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:inputType=\"none\"/>\r\n\r\n                </com.google.android.material.textfield.TextInputLayout>\r\n\r\n                <com.google.android.material.textfield.TextInputLayout\r\n                    android:id=\"@+id/dateLayout\"\r\n                    style=\"@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginBottom=\"16dp\"\r\n                    android:hint=\"Date\">\r\n\r\n                    <com.google.android.material.textfield.TextInputEditText\r\n                        android:id=\"@+id/dateInput\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:focusable=\"false\"\r\n                        android:inputType=\"none\" />\r\n\r\n                </com.google.android.material.textfield.TextInputLayout>\r\n\r\n                <com.google.android.material.button.MaterialButton\r\n                    android:id=\"@+id/searchButton\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:padding=\"12dp\"\r\n                    android:text=\"Search Buses\"\r\n                    android:textSize=\"16sp\"\r\n                    app:cornerRadius=\"8dp\" />\r\n\r\n            </LinearLayout>\r\n\r\n        </androidx.cardview.widget.CardView>\r\n\r\n    </com.google.android.material.appbar.AppBarLayout>\r\n\r\n    <androidx.core.widget.NestedScrollView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        app:layout_behavior=\"@string/appbar_scrolling_view_behavior\">\r\n\r\n        <androidx.recyclerview.widget.RecyclerView\r\n            android:id=\"@+id/busRecyclerView\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:clipToPadding=\"false\"\r\n            android:padding=\"16dp\" />\r\n\r\n    </androidx.core.widget.NestedScrollView>\r\n\r\n    <com.google.android.material.progressindicator.CircularProgressIndicator\r\n        android:id=\"@+id/progressIndicator\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_gravity=\"center\"\r\n        android:visibility=\"gone\" />\r\n\r\n</androidx.coordinatorlayout.widget.CoordinatorLayout> 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/res/layout/fragment_search.xml b/app/src/main/res/layout/fragment_search.xml
+---- a/app/src/main/res/layout/fragment_search.xml	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/res/layout/fragment_search.xml	(date 1736948715216)
+-@@ -92,12 +92,30 @@
+-         android:layout_height="match_parent"
+-         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+- 
+--        <androidx.recyclerview.widget.RecyclerView
+--            android:id="@+id/busRecyclerView"
+--            android:layout_width="match_parent"
+--            android:layout_height="wrap_content"
+--            android:clipToPadding="false"
+--            android:padding="16dp" />
+-+        <LinearLayout
+-+            android:layout_width="match_parent"
+-+            android:layout_height="wrap_content"
+-+            android:orientation="vertical">
+-+
+-+            <androidx.recyclerview.widget.RecyclerView
+-+                android:id="@+id/busRecyclerView"
+-+                android:layout_width="match_parent"
+-+                android:layout_height="wrap_content"
+-+                android:clipToPadding="false"
+-+                android:padding="8dp"
+-+                android:visibility="gone" />
+-+
+-+            <TextView
+-+                android:id="@+id/noResultsText"
+-+                android:layout_width="match_parent"
+-+                android:layout_height="wrap_content"
+-+                android:padding="16dp"
+-+                android:text="No buses found for this route"
+-+                android:textAlignment="center"
+-+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+-+                android:visibility="gone" />
+-+
+-+        </LinearLayout>
+- 
+-     </androidx.core.widget.NestedScrollView>
+- 
+-@@ -106,6 +124,7 @@
+-         android:layout_width="wrap_content"
+-         android:layout_height="wrap_content"
+-         android:layout_gravity="center"
+--        android:visibility="gone" />
+-+        android:visibility="gone"
+-+        android:indeterminate="true" />
+- 
+- </androidx.coordinatorlayout.widget.CoordinatorLayout> 
+-\ No newline at end of file
+-Index: app/src/main/java/com/example/bus_booking_system/data/database/AppDatabase.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.data.database;\r\n\r\nimport android.content.Context;\r\nimport android.os.AsyncTask;\r\nimport androidx.room.Database;\r\nimport androidx.room.Room;\r\nimport androidx.room.RoomDatabase;\r\nimport androidx.room.TypeConverters;\r\nimport androidx.room.migration.Migration;\r\nimport androidx.sqlite.db.SupportSQLiteDatabase;\r\nimport com.example.bus_booking_system.data.model.Bus;\r\nimport com.example.bus_booking_system.data.model.Booking;\r\nimport com.example.bus_booking_system.data.model.User;\r\nimport com.example.bus_booking_system.data.model.BooleanArrayConverter;\r\n\r\n@Database(entities = {User.class, Bus.class, Booking.class}, version = 3, exportSchema = false)\r\n@TypeConverters({BooleanArrayConverter.class})\r\npublic abstract class AppDatabase extends RoomDatabase {\r\n    private static volatile AppDatabase INSTANCE;\r\n    \r\n    public abstract UserDao userDao();\r\n    public abstract BusDao busDao();\r\n    public abstract BookingDao bookingDao();\r\n\r\n    static final Migration MIGRATION_1_2 = new Migration(1, 2) {\r\n        @Override\r\n        public void migrate(SupportSQLiteDatabase database) {\r\n            // Add seatStatus column to buses table\r\n            database.execSQL(\"ALTER TABLE buses ADD COLUMN seatStatus TEXT\");\r\n            database.execSQL(\"UPDATE buses SET seatStatus = '1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1' WHERE seatStatus IS NULL\");\r\n\r\n            // Add seatStatus column to bookings table\r\n            database.execSQL(\"ALTER TABLE bookings ADD COLUMN seatStatus TEXT DEFAULT 'AVAILABLE'\");\r\n\r\n            // Create indices for bookings table\r\n            database.execSQL(\"CREATE INDEX IF NOT EXISTS index_bookings_userId ON bookings(userId)\");\r\n            database.execSQL(\"CREATE INDEX IF NOT EXISTS index_bookings_busId ON bookings(busId)\");\r\n        }\r\n    };\r\n    \r\n    public static AppDatabase getDatabase(final Context context) {\r\n        if (INSTANCE == null) {\r\n            synchronized (AppDatabase.class) {\r\n                if (INSTANCE == null) {\r\n                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),\r\n                            AppDatabase.class, \"bus_booking_database\")\r\n                            .fallbackToDestructiveMigration()\r\n                            .addCallback(sRoomDatabaseCallback)\r\n                            .build();\r\n                }\r\n            }\r\n        }\r\n        return INSTANCE;\r\n    }\r\n\r\n    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {\r\n        @Override\r\n        public void onCreate(SupportSQLiteDatabase db) {\r\n            super.onCreate(db);\r\n            new PopulateDbAsync(INSTANCE).execute();\r\n        }\r\n\r\n        @Override\r\n        public void onOpen(SupportSQLiteDatabase db) {\r\n            super.onOpen(db);\r\n            // Optional: You can also populate data when database is opened\r\n        }\r\n    };\r\n\r\n    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {\r\n        private final BusDao busDao;\r\n\r\n        PopulateDbAsync(AppDatabase db) {\r\n            busDao = db.busDao();\r\n        }\r\n\r\n        @Override\r\n        protected Void doInBackground(final Void... params) {\r\n            // Add sample bus routes\r\n            \r\n            // KL to Penang Route\r\n            busDao.insert(new Bus(\"KL001\", \"Sri Maju Express\", \"Kuala Lumpur\", \"Penang\", \r\n                \"08:00\", \"13:00\", 45.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"KL002\", \"Nice Express\", \"Kuala Lumpur\", \"Penang\", \r\n                \"10:30\", \"15:30\", 45.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"KL003\", \"Transnasional\", \"Kuala Lumpur\", \"Penang\", \r\n                \"14:00\", \"19:00\", 42.00, 30, 30, \"Non-AC\"));\r\n            busDao.insert(new Bus(\"KL004\", \"Plusliner\", \"Kuala Lumpur\", \"Penang\", \r\n                \"20:00\", \"01:00\", 48.00, 30, 30, \"AC\"));\r\n\r\n            // KL to JB Route\r\n            busDao.insert(new Bus(\"KL005\", \"Sri Maju Express\", \"Kuala Lumpur\", \"Johor Bahru\", \r\n                \"07:00\", \"13:00\", 55.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"KL006\", \"Transnasional\", \"Kuala Lumpur\", \"Johor Bahru\", \r\n                \"09:30\", \"15:30\", 52.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"KL007\", \"Plusliner\", \"Kuala Lumpur\", \"Johor Bahru\", \r\n                \"13:00\", \"19:00\", 55.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"KL008\", \"Nice Express\", \"Kuala Lumpur\", \"Johor Bahru\", \r\n                \"22:00\", \"04:00\", 58.00, 30, 30, \"AC\"));\r\n\r\n            // KL to Melaka Route\r\n            busDao.insert(new Bus(\"KL009\", \"Sri Maju Express\", \"Kuala Lumpur\", \"Melaka\", \r\n                \"08:30\", \"11:30\", 25.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"KL010\", \"Transnasional\", \"Kuala Lumpur\", \"Melaka\", \r\n                \"11:00\", \"14:00\", 23.00, 30, 30, \"Non-AC\"));\r\n            busDao.insert(new Bus(\"KL011\", \"Nice Express\", \"Kuala Lumpur\", \"Melaka\", \r\n                \"14:30\", \"17:30\", 25.00, 30, 30, \"AC\"));\r\n\r\n            // KL to Ipoh Route\r\n            busDao.insert(new Bus(\"KL012\", \"Plusliner\", \"Kuala Lumpur\", \"Ipoh\", \r\n                \"07:30\", \"10:30\", 35.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"KL013\", \"Sri Maju Express\", \"Kuala Lumpur\", \"Ipoh\", \r\n                \"10:00\", \"13:00\", 33.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"KL014\", \"Nice Express\", \"Kuala Lumpur\", \"Ipoh\", \r\n                \"15:30\", \"18:30\", 35.00, 30, 30, \"AC\"));\r\n\r\n            // Return routes\r\n            // Penang to KL\r\n            busDao.insert(new Bus(\"PG001\", \"Sri Maju Express\", \"Penang\", \"Kuala Lumpur\", \r\n                \"08:00\", \"13:00\", 45.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"PG002\", \"Transnasional\", \"Penang\", \"Kuala Lumpur\", \r\n                \"14:00\", \"19:00\", 42.00, 30, 30, \"Non-AC\"));\r\n\r\n            // JB to KL\r\n            busDao.insert(new Bus(\"JB001\", \"Plusliner\", \"Johor Bahru\", \"Kuala Lumpur\", \r\n                \"07:00\", \"13:00\", 55.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"JB002\", \"Sri Maju Express\", \"Johor Bahru\", \"Kuala Lumpur\", \r\n                \"20:00\", \"02:00\", 58.00, 30, 30, \"AC\"));\r\n\r\n            // Melaka to KL\r\n            busDao.insert(new Bus(\"MK001\", \"Nice Express\", \"Melaka\", \"Kuala Lumpur\", \r\n                \"09:00\", \"12:00\", 25.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"MK002\", \"Transnasional\", \"Melaka\", \"Kuala Lumpur\", \r\n                \"15:00\", \"18:00\", 23.00, 30, 30, \"Non-AC\"));\r\n\r\n            // Ipoh to KL\r\n            busDao.insert(new Bus(\"IP001\", \"Sri Maju Express\", \"Ipoh\", \"Kuala Lumpur\", \r\n                \"08:30\", \"11:30\", 35.00, 30, 30, \"AC\"));\r\n            busDao.insert(new Bus(\"IP002\", \"Plusliner\", \"Ipoh\", \"Kuala Lumpur\", \r\n                \"16:30\", \"19:30\", 33.00, 30, 30, \"AC\"));\r\n\r\n            return null;\r\n        }\r\n    }\r\n} 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/data/database/AppDatabase.java b/app/src/main/java/com/example/bus_booking_system/data/database/AppDatabase.java
+---- a/app/src/main/java/com/example/bus_booking_system/data/database/AppDatabase.java	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/java/com/example/bus_booking_system/data/database/AppDatabase.java	(date 1736947468211)
+-@@ -80,64 +80,64 @@
+-             
+-             // KL to Penang Route
+-             busDao.insert(new Bus("KL001", "Sri Maju Express", "Kuala Lumpur", "Penang", 
+--                "08:00", "13:00", 45.00, 30, 30, "AC"));
+-+                "08:00", "13:00", 45.00, 30, 30));
+-             busDao.insert(new Bus("KL002", "Nice Express", "Kuala Lumpur", "Penang", 
+--                "10:30", "15:30", 45.00, 30, 30, "AC"));
+-+                "10:30", "15:30", 45.00, 30, 30));
+-             busDao.insert(new Bus("KL003", "Transnasional", "Kuala Lumpur", "Penang", 
+--                "14:00", "19:00", 42.00, 30, 30, "Non-AC"));
+-+                "14:00", "19:00", 42.00, 30, 30));
+-             busDao.insert(new Bus("KL004", "Plusliner", "Kuala Lumpur", "Penang", 
+--                "20:00", "01:00", 48.00, 30, 30, "AC"));
+-+                "20:00", "01:00", 48.00, 30, 30));
+- 
+-             // KL to JB Route
+-             busDao.insert(new Bus("KL005", "Sri Maju Express", "Kuala Lumpur", "Johor Bahru", 
+--                "07:00", "13:00", 55.00, 30, 30, "AC"));
+-+                "07:00", "13:00", 55.00, 30, 30));
+-             busDao.insert(new Bus("KL006", "Transnasional", "Kuala Lumpur", "Johor Bahru", 
+--                "09:30", "15:30", 52.00, 30, 30, "AC"));
+-+                "09:30", "15:30", 52.00, 30, 30));
+-             busDao.insert(new Bus("KL007", "Plusliner", "Kuala Lumpur", "Johor Bahru", 
+--                "13:00", "19:00", 55.00, 30, 30, "AC"));
+-+                "13:00", "19:00", 55.00, 30, 30));
+-             busDao.insert(new Bus("KL008", "Nice Express", "Kuala Lumpur", "Johor Bahru", 
+--                "22:00", "04:00", 58.00, 30, 30, "AC"));
+-+                "22:00", "04:00", 58.00, 30, 30));
+- 
+-             // KL to Melaka Route
+-             busDao.insert(new Bus("KL009", "Sri Maju Express", "Kuala Lumpur", "Melaka", 
+--                "08:30", "11:30", 25.00, 30, 30, "AC"));
+-+                "08:30", "11:30", 25.00, 30, 30));
+-             busDao.insert(new Bus("KL010", "Transnasional", "Kuala Lumpur", "Melaka", 
+--                "11:00", "14:00", 23.00, 30, 30, "Non-AC"));
+-+                "11:00", "14:00", 23.00, 30, 30));
+-             busDao.insert(new Bus("KL011", "Nice Express", "Kuala Lumpur", "Melaka", 
+--                "14:30", "17:30", 25.00, 30, 30, "AC"));
+-+                "14:30", "17:30", 25.00, 30, 30));
+- 
+-             // KL to Ipoh Route
+-             busDao.insert(new Bus("KL012", "Plusliner", "Kuala Lumpur", "Ipoh", 
+--                "07:30", "10:30", 35.00, 30, 30, "AC"));
+-+                "07:30", "10:30", 35.00, 30, 30));
+-             busDao.insert(new Bus("KL013", "Sri Maju Express", "Kuala Lumpur", "Ipoh", 
+--                "10:00", "13:00", 33.00, 30, 30, "AC"));
+-+                "10:00", "13:00", 33.00, 30, 30));
+-             busDao.insert(new Bus("KL014", "Nice Express", "Kuala Lumpur", "Ipoh", 
+--                "15:30", "18:30", 35.00, 30, 30, "AC"));
+-+                "15:30", "18:30", 35.00, 30, 30));
+- 
+-             // Return routes
+-             // Penang to KL
+-             busDao.insert(new Bus("PG001", "Sri Maju Express", "Penang", "Kuala Lumpur", 
+--                "08:00", "13:00", 45.00, 30, 30, "AC"));
+-+                "08:00", "13:00", 45.00, 30, 30));
+-             busDao.insert(new Bus("PG002", "Transnasional", "Penang", "Kuala Lumpur", 
+--                "14:00", "19:00", 42.00, 30, 30, "Non-AC"));
+-+                "14:00", "19:00", 42.00, 30, 30));
+- 
+-             // JB to KL
+-             busDao.insert(new Bus("JB001", "Plusliner", "Johor Bahru", "Kuala Lumpur", 
+--                "07:00", "13:00", 55.00, 30, 30, "AC"));
+-+                "07:00", "13:00", 55.00, 30, 30));
+-             busDao.insert(new Bus("JB002", "Sri Maju Express", "Johor Bahru", "Kuala Lumpur", 
+--                "20:00", "02:00", 58.00, 30, 30, "AC"));
+-+                "20:00", "02:00", 58.00, 30, 30));
+- 
+-             // Melaka to KL
+-             busDao.insert(new Bus("MK001", "Nice Express", "Melaka", "Kuala Lumpur", 
+--                "09:00", "12:00", 25.00, 30, 30, "AC"));
+-+                "09:00", "12:00", 25.00, 30, 30));
+-             busDao.insert(new Bus("MK002", "Transnasional", "Melaka", "Kuala Lumpur", 
+--                "15:00", "18:00", 23.00, 30, 30, "Non-AC"));
+-+                "15:00", "18:00", 23.00, 30, 30));
+- 
+-             // Ipoh to KL
+-             busDao.insert(new Bus("IP001", "Sri Maju Express", "Ipoh", "Kuala Lumpur", 
+--                "08:30", "11:30", 35.00, 30, 30, "AC"));
+-+                "08:30", "11:30", 35.00, 30, 30));
+-             busDao.insert(new Bus("IP002", "Plusliner", "Ipoh", "Kuala Lumpur", 
+--                "16:30", "19:30", 33.00, 30, 30, "AC"));
+-+                "16:30", "19:30", 33.00, 30, 30));
+- 
+-             return null;
+-         }
+-Index: app/src/main/java/com/example/bus_booking_system/ui/fragments/SearchFragment.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.ui.fragments;\r\n\r\nimport android.app.DatePickerDialog;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.ArrayAdapter;\r\nimport android.widget.AutoCompleteTextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.lifecycle.ViewModelProvider;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\n\r\nimport com.example.bus_booking_system.data.model.Bus;\r\nimport com.example.bus_booking_system.databinding.FragmentSearchBinding;\r\nimport com.example.bus_booking_system.ui.BusDetailsActivity;\r\nimport com.example.bus_booking_system.ui.adapter.BusAdapter;\r\nimport com.example.bus_booking_system.viewmodel.BusViewModel;\r\n\r\nimport java.text.SimpleDateFormat;\r\nimport java.util.Calendar;\r\nimport java.util.List;\r\nimport java.util.Locale;\r\n\r\npublic class SearchFragment extends Fragment implements BusAdapter.OnBusClickListener {\r\n    private FragmentSearchBinding binding;\r\n    private BusViewModel busViewModel;\r\n    private BusAdapter adapter;\r\n    private Calendar selectedDate = Calendar.getInstance();\r\n    private SimpleDateFormat dateFormat = new SimpleDateFormat(\"dd/MM/yyyy\", Locale.getDefault());\r\n    private AutoCompleteTextView sourceInput;\r\n    private AutoCompleteTextView destinationInput;\r\n    private ArrayAdapter<String> sourceAdapter;\r\n    private ArrayAdapter<String> destinationAdapter;\r\n\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {\r\n        binding = FragmentSearchBinding.inflate(inflater, container, false);\r\n        return binding.getRoot();\r\n    }\r\n\r\n    @Override\r\n    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {\r\n        super.onViewCreated(view, savedInstanceState);\r\n        \r\n        setupViewModel();\r\n        setupRecyclerView();\r\n        setupSpinners();\r\n        setupClickListeners();\r\n        loadInitialData();\r\n    }\r\n\r\n    private void setupViewModel() {\r\n        busViewModel = new ViewModelProvider(this).get(BusViewModel.class);\r\n    }\r\n\r\n    private void setupSpinners() {\r\n        sourceInput = binding.sourceInput;\r\n        destinationInput = binding.destinationInput;\r\n\r\n        sourceAdapter = new ArrayAdapter<>(requireContext(), \r\n            android.R.layout.simple_dropdown_item_1line);\r\n        destinationAdapter = new ArrayAdapter<>(requireContext(), \r\n            android.R.layout.simple_dropdown_item_1line);\r\n\r\n        sourceInput.setAdapter(sourceAdapter);\r\n        destinationInput.setAdapter(destinationAdapter);\r\n\r\n        // Add listeners for source selection\r\n        sourceInput.setOnItemClickListener((parent, view, position, id) -> {\r\n            String selectedSource = sourceAdapter.getItem(position);\r\n            updateDestinationsForSource(selectedSource);\r\n            // Clear destination when source changes\r\n            destinationInput.setText(\"\", false);\r\n        });\r\n\r\n        // Add listeners for destination selection\r\n        destinationInput.setOnItemClickListener((parent, view, position, id) -> {\r\n            String selectedDestination = destinationAdapter.getItem(position);\r\n            updateSourcesForDestination(selectedDestination);\r\n        });\r\n    }\r\n\r\n    private void loadInitialData() {\r\n        // Load initial sources\r\n        busViewModel.getAllSources().observe(getViewLifecycleOwner(), this::updateSourceAdapter);\r\n    }\r\n\r\n    private void updateDestinationsForSource(String source) {\r\n        busViewModel.getDestinationsForSource(source).observe(getViewLifecycleOwner(), \r\n            this::updateDestinationAdapter);\r\n    }\r\n\r\n    private void updateSourcesForDestination(String destination) {\r\n        if (sourceInput.getText().toString().isEmpty()) {\r\n            busViewModel.getSourcesForDestination(destination).observe(getViewLifecycleOwner(), \r\n                this::updateSourceAdapter);\r\n        }\r\n    }\r\n\r\n    private void updateSourceAdapter(List<String> sources) {\r\n        sourceAdapter.clear();\r\n        sourceAdapter.addAll(sources);\r\n    }\r\n\r\n    private void updateDestinationAdapter(List<String> destinations) {\r\n        destinationAdapter.clear();\r\n        destinationAdapter.addAll(destinations);\r\n    }\r\n\r\n    private void setupRecyclerView() {\r\n        adapter = new BusAdapter(this);\r\n        binding.busRecyclerView.setAdapter(adapter);\r\n        binding.busRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));\r\n    }\r\n\r\n    private void setupClickListeners() {\r\n        binding.searchButton.setOnClickListener(v -> performSearch());\r\n        binding.dateInput.setOnClickListener(v -> showDatePicker());\r\n    }\r\n\r\n    private void showDatePicker() {\r\n        DatePickerDialog dialog = new DatePickerDialog(\r\n                requireContext(),\r\n                (view, year, month, dayOfMonth) -> {\r\n                    selectedDate.set(year, month, dayOfMonth);\r\n                    binding.dateInput.setText(dateFormat.format(selectedDate.getTime()));\r\n                },\r\n                selectedDate.get(Calendar.YEAR),\r\n                selectedDate.get(Calendar.MONTH),\r\n                selectedDate.get(Calendar.DAY_OF_MONTH)\r\n        );\r\n        dialog.getDatePicker().setMinDate(System.currentTimeMillis());\r\n        dialog.show();\r\n    }\r\n\r\n    private void performSearch() {\r\n        String source = sourceInput.getText().toString().trim();\r\n        String destination = destinationInput.getText().toString().trim();\r\n        String date = binding.dateInput.getText().toString().trim();\r\n\r\n        if (source.isEmpty() || destination.isEmpty() || date.isEmpty()) {\r\n            Toast.makeText(requireContext(), \"Please fill all fields\", Toast.LENGTH_SHORT).show();\r\n            return;\r\n        }\r\n\r\n        binding.progressIndicator.setVisibility(View.VISIBLE);\r\n        busViewModel.searchBuses(source, destination).observe(getViewLifecycleOwner(), buses -> {\r\n            binding.progressIndicator.setVisibility(View.GONE);\r\n            adapter.submitList(buses);\r\n        });\r\n    }\r\n\r\n    @Override\r\n    public void onBusClick(Bus bus) {\r\n        Intent intent = new Intent(requireContext(), BusDetailsActivity.class);\r\n        intent.putExtra(\"bus_id\", bus.getId());\r\n        intent.putExtra(\"journey_date\", binding.dateInput.getText().toString());\r\n        startActivity(intent);\r\n    }\r\n\r\n    @Override\r\n    public void onBookClick(Bus bus) {\r\n        onBusClick(bus);\r\n    }\r\n\r\n    @Override\r\n    public void onDestroyView() {\r\n        super.onDestroyView();\r\n        binding = null;\r\n    }\r\n} 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/ui/fragments/SearchFragment.java b/app/src/main/java/com/example/bus_booking_system/ui/fragments/SearchFragment.java
+---- a/app/src/main/java/com/example/bus_booking_system/ui/fragments/SearchFragment.java	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/java/com/example/bus_booking_system/ui/fragments/SearchFragment.java	(date 1736948715217)
+-@@ -27,6 +27,14 @@
+- import java.util.List;
+- import java.util.Locale;
+- 
+-+/**
+-+ * SearchFragment handles the bus search functionality
+-+ * Flow:
+-+ * 1. User selects source and destination from dropdowns
+-+ * 2. User selects journey date using date picker
+-+ * 3. On search, displays available buses
+-+ * 4. On bus selection, passes details including journey date to BusDetailsActivity
+-+ */
+- public class SearchFragment extends Fragment implements BusAdapter.OnBusClickListener {
+-     private FragmentSearchBinding binding;
+-     private BusViewModel busViewModel;
+-@@ -37,6 +45,7 @@
+-     private AutoCompleteTextView destinationInput;
+-     private ArrayAdapter<String> sourceAdapter;
+-     private ArrayAdapter<String> destinationAdapter;
+-+    private String selectedJourneyDate; // Store selected journey date
+- 
+-     @Override
+-     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+-@@ -47,7 +56,6 @@
+-     @Override
+-     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+-         super.onViewCreated(view, savedInstanceState);
+--        
+-         setupViewModel();
+-         setupRecyclerView();
+-         setupSpinners();
+-@@ -60,6 +68,7 @@
+-     }
+- 
+-     private void setupSpinners() {
+-+        // Initialize source and destination dropdowns
+-         sourceInput = binding.sourceInput;
+-         destinationInput = binding.destinationInput;
+- 
+-@@ -71,15 +80,14 @@
+-         sourceInput.setAdapter(sourceAdapter);
+-         destinationInput.setAdapter(destinationAdapter);
+- 
+--        // Add listeners for source selection
+-+        // Update destinations when source is selected
+-         sourceInput.setOnItemClickListener((parent, view, position, id) -> {
+-             String selectedSource = sourceAdapter.getItem(position);
+-             updateDestinationsForSource(selectedSource);
+--            // Clear destination when source changes
+-             destinationInput.setText("", false);
+-         });
+- 
+--        // Add listeners for destination selection
+-+        // Update sources when destination is selected (if source is empty)
+-         destinationInput.setOnItemClickListener((parent, view, position, id) -> {
+-             String selectedDestination = destinationAdapter.getItem(position);
+-             updateSourcesForDestination(selectedDestination);
+-@@ -129,12 +137,14 @@
+-                 requireContext(),
+-                 (view, year, month, dayOfMonth) -> {
+-                     selectedDate.set(year, month, dayOfMonth);
+--                    binding.dateInput.setText(dateFormat.format(selectedDate.getTime()));
+-+                    selectedJourneyDate = dateFormat.format(selectedDate.getTime());
+-+                    binding.dateInput.setText(selectedJourneyDate);
+-                 },
+-                 selectedDate.get(Calendar.YEAR),
+-                 selectedDate.get(Calendar.MONTH),
+-                 selectedDate.get(Calendar.DAY_OF_MONTH)
+-         );
+-+        // Set minimum date to today
+-         dialog.getDatePicker().setMinDate(System.currentTimeMillis());
+-         dialog.show();
+-     }
+-@@ -142,25 +152,50 @@
+-     private void performSearch() {
+-         String source = sourceInput.getText().toString().trim();
+-         String destination = destinationInput.getText().toString().trim();
+--        String date = binding.dateInput.getText().toString().trim();
+- 
+--        if (source.isEmpty() || destination.isEmpty() || date.isEmpty()) {
+--            Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+-+        // Validate all fields are filled
+-+        if (source.isEmpty() || destination.isEmpty()) {
+-+            Toast.makeText(requireContext(), "Please select source and destination", Toast.LENGTH_SHORT).show();
+-+            return;
+-+        }
+-+
+-+        if (selectedJourneyDate == null || selectedJourneyDate.isEmpty()) {
+-+            Toast.makeText(requireContext(), "Please select journey date", Toast.LENGTH_SHORT).show();
+-             return;
+-         }
+- 
+-+        // Show loading indicator and hide other views
+-         binding.progressIndicator.setVisibility(View.VISIBLE);
+-+        binding.busRecyclerView.setVisibility(View.GONE);
+-+        binding.noResultsText.setVisibility(View.GONE);
+-+
+-+        // Search for buses
+-         busViewModel.searchBuses(source, destination).observe(getViewLifecycleOwner(), buses -> {
+-             binding.progressIndicator.setVisibility(View.GONE);
+--            adapter.submitList(buses);
+-+            
+-+            if (buses != null && !buses.isEmpty()) {
+-+                adapter.submitList(buses);
+-+                binding.busRecyclerView.setVisibility(View.VISIBLE);
+-+                binding.noResultsText.setVisibility(View.GONE);
+-+            } else {
+-+                binding.busRecyclerView.setVisibility(View.GONE);
+-+                binding.noResultsText.setVisibility(View.VISIBLE);
+-+            }
+-         });
+-     }
+- 
+-     @Override
+-     public void onBusClick(Bus bus) {
+-+        // Validate journey date before proceeding
+-+        if (selectedJourneyDate == null || selectedJourneyDate.isEmpty()) {
+-+            Toast.makeText(requireContext(), "Please select journey date first", Toast.LENGTH_SHORT).show();
+-+            return;
+-+        }
+-+
+-+        // Pass selected bus details and journey date to BusDetailsActivity
+-         Intent intent = new Intent(requireContext(), BusDetailsActivity.class);
+-         intent.putExtra("bus_id", bus.getId());
+--        intent.putExtra("journey_date", binding.dateInput.getText().toString());
+-+        intent.putExtra("journey_date", selectedJourneyDate);
+-         startActivity(intent);
+-     }
+- 
+-Index: app/src/main/java/com/example/bus_booking_system/data/repository/BusRepository.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.data.repository;\r\n\r\nimport android.app.Application;\r\n\r\nimport androidx.lifecycle.LiveData;\r\n\r\nimport com.example.bus_booking_system.data.database.AppDatabase;\r\nimport com.example.bus_booking_system.data.database.BusDao;\r\nimport com.example.bus_booking_system.data.model.Bus;\r\n\r\nimport java.util.List;\r\nimport java.util.concurrent.ExecutorService;\r\nimport java.util.concurrent.Executors;\r\n\r\npublic class BusRepository {\r\n    private BusDao busDao;\r\n    private LiveData<List<Bus>> allBuses;\r\n    private ExecutorService executorService;\r\n\r\n    public BusRepository(Application application) {\r\n        AppDatabase db = AppDatabase.getDatabase(application);\r\n        busDao = db.busDao();\r\n        allBuses = busDao.getAllBuses();\r\n        executorService = Executors.newSingleThreadExecutor();\r\n    }\r\n\r\n    public LiveData<List<Bus>> getAllBuses() {\r\n        return allBuses;\r\n    }\r\n\r\n    public LiveData<Bus> getBusById(int id) {\r\n        return busDao.getBusById(id);\r\n    }\r\n\r\n    public LiveData<List<Bus>> searchBuses(String source, String destination) {\r\n        return busDao.searchBuses(source, destination);\r\n    }\r\n\r\n    public void insert(Bus bus) {\r\n        executorService.execute(() -> busDao.insert(bus));\r\n    }\r\n\r\n    public void update(Bus bus) {\r\n        executorService.execute(() -> busDao.update(bus));\r\n    }\r\n\r\n    public void delete(Bus bus) {\r\n        executorService.execute(() -> busDao.delete(bus));\r\n    }\r\n\r\n    public void decreaseAvailableSeats(int busId) {\r\n        executorService.execute(() -> busDao.decreaseAvailableSeats(busId));\r\n    }\r\n\r\n    public void increaseAvailableSeats(int busId) {\r\n        executorService.execute(() -> busDao.increaseAvailableSeats(busId));\r\n    }\r\n\r\n    public LiveData<Integer> getAvailableSeats(int busId) {\r\n        return busDao.getAvailableSeats(busId);\r\n    }\r\n\r\n    public LiveData<boolean[]> getSeatStatus(int busId) {\r\n        return busDao.getSeatStatus(busId);\r\n    }\r\n\r\n    public void updateSeatStatus(int busId, boolean[] seatStatus) {\r\n        executorService.execute(() -> busDao.updateSeatStatus(busId, seatStatus));\r\n    }\r\n\r\n    public void bookSeat(int busId, int seatNumber) {\r\n        executorService.execute(() -> {\r\n            Bus bus = busDao.getBusById(busId).getValue();\r\n            if (bus != null) {\r\n                boolean[] seatStatus = bus.getSeatStatus();\r\n                if (seatStatus != null && seatNumber > 0 && seatNumber <= seatStatus.length) {\r\n                    seatStatus[seatNumber - 1] = false;\r\n                    busDao.updateSeatStatus(busId, seatStatus);\r\n                    busDao.decreaseAvailableSeats(busId);\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    public void releaseSeat(int busId, int seatNumber) {\r\n        executorService.execute(() -> {\r\n            Bus bus = busDao.getBusById(busId).getValue();\r\n            if (bus != null) {\r\n                boolean[] seatStatus = bus.getSeatStatus();\r\n                if (seatStatus != null && seatNumber > 0 && seatNumber <= seatStatus.length) {\r\n                    seatStatus[seatNumber - 1] = true;\r\n                    busDao.updateSeatStatus(busId, seatStatus);\r\n                    busDao.increaseAvailableSeats(busId);\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    public LiveData<List<String>> getAllSources() {\r\n        return busDao.getAllSources();\r\n    }\r\n\r\n    public LiveData<List<String>> getAllDestinations() {\r\n        return busDao.getAllDestinations();\r\n    }\r\n\r\n    public LiveData<List<String>> getDestinationsForSource(String source) {\r\n        return busDao.getDestinationsForSource(source);\r\n    }\r\n    \r\n    public LiveData<List<String>> getSourcesForDestination(String destination) {\r\n        return busDao.getSourcesForDestination(destination);\r\n    }\r\n} 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/data/repository/BusRepository.java b/app/src/main/java/com/example/bus_booking_system/data/repository/BusRepository.java
+---- a/app/src/main/java/com/example/bus_booking_system/data/repository/BusRepository.java	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/java/com/example/bus_booking_system/data/repository/BusRepository.java	(date 1736948715216)
+-@@ -7,6 +7,7 @@
+- import com.example.bus_booking_system.data.database.AppDatabase;
+- import com.example.bus_booking_system.data.database.BusDao;
+- import com.example.bus_booking_system.data.model.Bus;
+-+import com.example.bus_booking_system.data.model.Booking;
+- 
+- import java.util.List;
+- import java.util.concurrent.ExecutorService;
+-@@ -16,14 +17,20 @@
+-     private BusDao busDao;
+-     private LiveData<List<Bus>> allBuses;
+-     private ExecutorService executorService;
+-+    private Application application;
+- 
+-     public BusRepository(Application application) {
+-+        this.application = application;
+-         AppDatabase db = AppDatabase.getDatabase(application);
+-         busDao = db.busDao();
+-         allBuses = busDao.getAllBuses();
+-         executorService = Executors.newSingleThreadExecutor();
+-     }
+- 
+-+    protected Application getApplication() {
+-+        return application;
+-+    }
+-+
+-     public LiveData<List<Bus>> getAllBuses() {
+-         return allBuses;
+-     }
+-@@ -49,11 +56,11 @@
+-     }
+- 
+-     public void decreaseAvailableSeats(int busId) {
+--        executorService.execute(() -> busDao.decreaseAvailableSeats(busId));
+-+        executorService.execute(() -> busDao.decrementAvailableSeats(busId));
+-     }
+- 
+-     public void increaseAvailableSeats(int busId) {
+--        executorService.execute(() -> busDao.increaseAvailableSeats(busId));
+-+        executorService.execute(() -> busDao.incrementAvailableSeats(busId));
+-     }
+- 
+-     public LiveData<Integer> getAvailableSeats(int busId) {
+-@@ -76,7 +83,7 @@
+-                 if (seatStatus != null && seatNumber > 0 && seatNumber <= seatStatus.length) {
+-                     seatStatus[seatNumber - 1] = false;
+-                     busDao.updateSeatStatus(busId, seatStatus);
+--                    busDao.decreaseAvailableSeats(busId);
+-+                    busDao.decrementAvailableSeats(busId);
+-                 }
+-             }
+-         });
+-@@ -90,7 +97,7 @@
+-                 if (seatStatus != null && seatNumber > 0 && seatNumber <= seatStatus.length) {
+-                     seatStatus[seatNumber - 1] = true;
+-                     busDao.updateSeatStatus(busId, seatStatus);
+--                    busDao.increaseAvailableSeats(busId);
+-+                    busDao.incrementAvailableSeats(busId);
+-                 }
+-             }
+-         });
+-@@ -111,4 +118,14 @@
+-     public LiveData<List<String>> getSourcesForDestination(String destination) {
+-         return busDao.getSourcesForDestination(destination);
+-     }
+-+
+-+    /**
+-+     * Get all bookings for a specific bus on a specific date
+-+     * @param busId The ID of the bus
+-+     * @param journeyDate The date of travel in dd/MM/yyyy format
+-+     * @return LiveData containing list of bookings for that date
+-+     */
+-+    public LiveData<List<Booking>> getBookingsByBusAndDate(int busId, String journeyDate) {
+-+        return AppDatabase.getDatabase(getApplication()).bookingDao().getBookingsByBusAndDate(busId, journeyDate);
+-+    }
+- } 
+-\ No newline at end of file
+-Index: .idea/deploymentTargetSelector.xml
+-===================================================================
+-diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+-deleted file mode 100644
+---- a/.idea/deploymentTargetSelector.xml	(revision 94fae0299c24235e8d77519fddf817b067b32950)
+-+++ /dev/null	(revision 94fae0299c24235e8d77519fddf817b067b32950)
+-@@ -1,10 +0,0 @@
+--<?xml version="1.0" encoding="UTF-8"?>
+--<project version="4">
+--  <component name="deploymentTargetSelector">
+--    <selectionStates>
+--      <SelectionState runConfigName="Unnamed">
+--        <option name="selectionMode" value="DROPDOWN" />
+--      </SelectionState>
+--    </selectionStates>
+--  </component>
+--</project>
+-\ No newline at end of file
+-Index: app/src/main/java/com/example/bus_booking_system/data/database/BookingDao.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.data.database;\r\n\r\nimport androidx.lifecycle.LiveData;\r\nimport androidx.room.Dao;\r\nimport androidx.room.Delete;\r\nimport androidx.room.Insert;\r\nimport androidx.room.Query;\r\nimport androidx.room.Update;\r\n\r\nimport com.example.bus_booking_system.data.model.Booking;\r\n\r\nimport java.util.List;\r\n\r\n@Dao\r\npublic interface BookingDao {\r\n    @Insert\r\n    long insert(Booking booking);\r\n    \r\n    @Update\r\n    void update(Booking booking);\r\n    \r\n    @Delete\r\n    void delete(Booking booking);\r\n    \r\n    @Query(\"SELECT * FROM bookings WHERE id = :id LIMIT 1\")\r\n    LiveData<Booking> getBookingById(int id);\r\n    \r\n    @Query(\"SELECT * FROM bookings WHERE userId = :userId\")\r\n    LiveData<List<Booking>> getUserBookings(int userId);\r\n    \r\n    @Query(\"SELECT * FROM bookings WHERE busId = :busId\")\r\n    LiveData<List<Booking>> getBusBookings(int busId);\r\n    \r\n    @Query(\"SELECT * FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate\")\r\n    LiveData<List<Booking>> getBookingsByBusAndDate(int busId, String journeyDate);\r\n    \r\n    @Query(\"UPDATE bookings SET status = :status WHERE id = :bookingId\")\r\n    void updateBookingStatus(int bookingId, String status);\r\n    \r\n    @Query(\"UPDATE bookings SET paymentStatus = :paymentStatus WHERE id = :bookingId\")\r\n    void updatePaymentStatus(int bookingId, String paymentStatus);\r\n    \r\n    @Query(\"SELECT EXISTS(SELECT 1 FROM users WHERE id = :userId LIMIT 1)\")\r\n    boolean checkUserExists(int userId);\r\n    \r\n    @Query(\"SELECT EXISTS(SELECT 1 FROM buses WHERE id = :busId LIMIT 1)\")\r\n    boolean checkBusExists(int busId);\r\n    \r\n    @Query(\"SELECT COUNT(*) FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate AND seatNumber = :seatNumber\")\r\n    LiveData<Integer> isSeatBooked(int busId, String journeyDate, String seatNumber);\r\n    \r\n    @Query(\"SELECT * FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate\")\r\n    LiveData<List<Booking>> getBookedSeats(int busId, String journeyDate);\r\n    \r\n    @Query(\"SELECT * FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate AND seatNumber = :seatNumber LIMIT 1\")\r\n    LiveData<Booking> getBookingBySeat(int busId, String journeyDate, String seatNumber);\r\n} 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/data/database/BookingDao.java b/app/src/main/java/com/example/bus_booking_system/data/database/BookingDao.java
+---- a/app/src/main/java/com/example/bus_booking_system/data/database/BookingDao.java	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/java/com/example/bus_booking_system/data/database/BookingDao.java	(date 1736948259636)
+-@@ -31,6 +31,13 @@
+-     @Query("SELECT * FROM bookings WHERE busId = :busId")
+-     LiveData<List<Booking>> getBusBookings(int busId);
+-     
+-+    /**
+-+     * Get bookings for a specific bus on a specific date
+-+     * Used to check seat availability for a particular journey date
+-+     * @param busId The ID of the bus
+-+     * @param journeyDate The date of travel in dd/MM/yyyy format
+-+     * @return List of bookings for that bus and date
+-+     */
+-     @Query("SELECT * FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate")
+-     LiveData<List<Booking>> getBookingsByBusAndDate(int busId, String journeyDate);
+-     
+-@@ -46,6 +53,13 @@
+-     @Query("SELECT EXISTS(SELECT 1 FROM buses WHERE id = :busId LIMIT 1)")
+-     boolean checkBusExists(int busId);
+-     
+-+    /**
+-+     * Check if a specific seat is booked for a journey date
+-+     * @param busId The ID of the bus
+-+     * @param journeyDate The date of travel in dd/MM/yyyy format
+-+     * @param seatNumber The seat number to check
+-+     * @return Number of bookings for that seat (0 if available, 1 if booked)
+-+     */
+-     @Query("SELECT COUNT(*) FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate AND seatNumber = :seatNumber")
+-     LiveData<Integer> isSeatBooked(int busId, String journeyDate, String seatNumber);
+-     
+-Index: app/src/main/res/layout/activity_bus_details.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\">\r\n\r\n    <com.google.android.material.appbar.AppBarLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\">\r\n\r\n        <androidx.appcompat.widget.Toolbar\r\n            android:id=\"@+id/toolbar\"\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"?attr/actionBarSize\"\r\n            android:background=\"?attr/colorPrimary\"\r\n            android:theme=\"@style/ThemeOverlay.MaterialComponents.Dark.ActionBar\" />\r\n\r\n    </com.google.android.material.appbar.AppBarLayout>\r\n\r\n    <androidx.core.widget.NestedScrollView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        app:layout_behavior=\"@string/appbar_scrolling_view_behavior\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"vertical\"\r\n            android:padding=\"16dp\">\r\n\r\n            <com.google.android.material.card.MaterialCardView\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginBottom=\"16dp\"\r\n                app:cardCornerRadius=\"8dp\"\r\n                app:cardElevation=\"4dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:orientation=\"vertical\"\r\n                    android:padding=\"16dp\">\r\n\r\n                    <TextView\r\n                        android:id=\"@+id/busNameText\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:textAppearance=\"@style/TextAppearance.MaterialComponents.Headline6\" />\r\n\r\n                    <TextView\r\n                        android:id=\"@+id/busTypeText\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_marginTop=\"8dp\"\r\n                        android:textAppearance=\"@style/TextAppearance.MaterialComponents.Body2\" />\r\n\r\n                    <View\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"1dp\"\r\n                        android:layout_marginVertical=\"8dp\"\r\n                        android:background=\"@color/design_default_color_surface\" />\r\n\r\n                    <LinearLayout\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:orientation=\"horizontal\">\r\n\r\n                        <LinearLayout\r\n                            android:layout_width=\"0dp\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_weight=\"1\"\r\n                            android:orientation=\"vertical\">\r\n\r\n                            <TextView\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"Departure\"\r\n                                android:textAppearance=\"@style/TextAppearance.MaterialComponents.Caption\" />\r\n\r\n                            <TextView\r\n                                android:id=\"@+id/departureTimeText\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:textAppearance=\"@style/TextAppearance.MaterialComponents.Body1\"\r\n                                android:textStyle=\"bold\" />\r\n\r\n                            <TextView\r\n                                android:id=\"@+id/sourceText\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:textAppearance=\"@style/TextAppearance.MaterialComponents.Body2\" />\r\n                        </LinearLayout>\r\n\r\n                        <LinearLayout\r\n                            android:layout_width=\"0dp\"\r\n                            android:layout_height=\"wrap_content\"\r\n                            android:layout_weight=\"1\"\r\n                            android:orientation=\"vertical\">\r\n\r\n                            <TextView\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:text=\"Arrival\"\r\n                                android:textAppearance=\"@style/TextAppearance.MaterialComponents.Caption\" />\r\n\r\n                            <TextView\r\n                                android:id=\"@+id/arrivalTimeText\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:textAppearance=\"@style/TextAppearance.MaterialComponents.Body1\"\r\n                                android:textStyle=\"bold\" />\r\n\r\n                            <TextView\r\n                                android:id=\"@+id/destinationText\"\r\n                                android:layout_width=\"wrap_content\"\r\n                                android:layout_height=\"wrap_content\"\r\n                                android:textAppearance=\"@style/TextAppearance.MaterialComponents.Body2\" />\r\n                        </LinearLayout>\r\n                    </LinearLayout>\r\n                </LinearLayout>\r\n            </com.google.android.material.card.MaterialCardView>\r\n\r\n            <com.google.android.material.card.MaterialCardView\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_marginBottom=\"16dp\"\r\n                app:cardCornerRadius=\"8dp\"\r\n                app:cardElevation=\"4dp\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:orientation=\"vertical\"\r\n                    android:padding=\"16dp\">\r\n\r\n                    <TextView\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:text=\"Select Seat\"\r\n                        android:textAppearance=\"@style/TextAppearance.MaterialComponents.Subtitle1\" />\r\n\r\n                    <GridLayout\r\n                        android:id=\"@+id/seatsContainer\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_marginTop=\"16dp\"\r\n                        android:alignmentMode=\"alignMargins\"\r\n                        android:columnCount=\"3\"\r\n                        android:columnOrderPreserved=\"false\"\r\n                        android:padding=\"4dp\"\r\n                        android:rowCount=\"10\"\r\n                        android:useDefaultMargins=\"true\" />\r\n\r\n                </LinearLayout>\r\n            </com.google.android.material.card.MaterialCardView>\r\n        </LinearLayout>\r\n    </androidx.core.widget.NestedScrollView>\r\n\r\n    <com.google.android.material.card.MaterialCardView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_gravity=\"bottom\"\r\n        app:cardElevation=\"8dp\">\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:orientation=\"horizontal\"\r\n            android:padding=\"16dp\">\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"0dp\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:layout_weight=\"1\"\r\n                android:orientation=\"vertical\">\r\n\r\n                <TextView\r\n                    android:id=\"@+id/selectedSeatText\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:text=\"No seat selected\"\r\n                    android:textAppearance=\"@style/TextAppearance.MaterialComponents.Caption\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/fareText\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:textAppearance=\"@style/TextAppearance.MaterialComponents.Subtitle1\"\r\n                    android:textStyle=\"bold\" />\r\n            </LinearLayout>\r\n\r\n            <com.google.android.material.button.MaterialButton\r\n                android:id=\"@+id/proceedButton\"\r\n                android:layout_width=\"wrap_content\"\r\n                android:layout_height=\"wrap_content\"\r\n                android:enabled=\"false\"\r\n                android:text=\"Proceed to Pay\"\r\n                app:cornerRadius=\"8dp\" />\r\n        </LinearLayout>\r\n    </com.google.android.material.card.MaterialCardView>\r\n\r\n</androidx.coordinatorlayout.widget.CoordinatorLayout> 
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/res/layout/activity_bus_details.xml b/app/src/main/res/layout/activity_bus_details.xml
+---- a/app/src/main/res/layout/activity_bus_details.xml	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/res/layout/activity_bus_details.xml	(date 1736948259631)
+-@@ -45,14 +45,16 @@
+-                         android:id="@+id/busNameText"
+-                         android:layout_width="match_parent"
+-                         android:layout_height="wrap_content"
+--                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+-+                        android:textSize="18sp"
+-+                        android:textStyle="bold"
+-+                        android:padding="8dp"/>
+- 
+-                     <TextView
+--                        android:id="@+id/busTypeText"
+--                        android:layout_width="wrap_content"
+-+                        android:id="@+id/journeyDateText"
+-+                        android:layout_width="match_parent"
+-                         android:layout_height="wrap_content"
+--                        android:layout_marginTop="8dp"
+--                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+-+                        android:textSize="16sp"
+-+                        android:padding="8dp"/>
+- 
+-                     <View
+-                         android:layout_width="match_parent"
+-@@ -63,7 +65,8 @@
+-                     <LinearLayout
+-                         android:layout_width="match_parent"
+-                         android:layout_height="wrap_content"
+--                        android:orientation="horizontal">
+-+                        android:orientation="horizontal"
+-+                        android:padding="8dp">
+- 
+-                         <LinearLayout
+-                             android:layout_width="0dp"
+-@@ -79,17 +82,24 @@
+- 
+-                             <TextView
+-                                 android:id="@+id/departureTimeText"
+--                                android:layout_width="wrap_content"
+-+                                android:layout_width="0dp"
+-                                 android:layout_height="wrap_content"
+--                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+--                                android:textStyle="bold" />
+-+                                android:layout_weight="1"
+-+                                android:textSize="16sp"/>
+- 
+-                             <TextView
+-                                 android:id="@+id/sourceText"
+--                                android:layout_width="wrap_content"
+--                                android:layout_height="wrap_content"
+--                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+--                        </LinearLayout>
+-+                                android:layout_width="0dp"
+-+                                android:layout_height="wrap_content"
+-+                                android:layout_weight="1"
+-+                                android:textSize="16sp"/>
+-+                        </LinearLayout>
+-+
+-+                        <LinearLayout
+-+                            android:layout_width="wrap_content"
+-+                            android:layout_height="wrap_content"
+-+                            android:text=" → "
+-+                            android:textSize="16sp"/>
+- 
+-                         <LinearLayout
+-                             android:layout_width="0dp"
+-@@ -105,18 +115,40 @@
+- 
+-                             <TextView
+-                                 android:id="@+id/arrivalTimeText"
+--                                android:layout_width="wrap_content"
+-+                                android:layout_width="0dp"
+-                                 android:layout_height="wrap_content"
+--                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+--                                android:textStyle="bold" />
+-+                                android:layout_weight="1"
+-+                                android:textSize="16sp"/>
+- 
+-                             <TextView
+-                                 android:id="@+id/destinationText"
+--                                android:layout_width="wrap_content"
+-+                                android:layout_width="0dp"
+-                                 android:layout_height="wrap_content"
+--                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+-+                                android:layout_weight="1"
+-+                                android:textSize="16sp"/>
+-                         </LinearLayout>
+-                     </LinearLayout>
+-+
+-+                    <View
+-+                        android:layout_width="match_parent"
+-+                        android:layout_height="1dp"
+-+                        android:layout_marginVertical="8dp"
+-+                        android:background="@color/design_default_color_surface" />
+-+
+-+                    <LinearLayout
+-+                        android:layout_width="match_parent"
+-+                        android:layout_height="wrap_content"
+-+                        android:orientation="horizontal"
+-+                        android:padding="8dp">
+-+
+-+                        <TextView
+-+                            android:id="@+id/fareText"
+-+                            android:layout_width="match_parent"
+-+                            android:layout_height="wrap_content"
+-+                            android:textSize="16sp"
+-+                            android:textStyle="bold"
+-+                            android:padding="8dp"/>
+-+                    </LinearLayout>
+-                 </LinearLayout>
+-             </com.google.android.material.card.MaterialCardView>
+- 
+-@@ -182,7 +214,7 @@
+-                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+- 
+-                 <TextView
+--                    android:id="@+id/fareText"
+-+                    android:id="@+id/totalFareText"
+-                     android:layout_width="wrap_content"
+-                     android:layout_height="wrap_content"
+-                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+-Index: app/src/main/java/com/example/bus_booking_system/data/model/Bus.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.data.model;\r\n\r\nimport androidx.room.Entity;\r\nimport androidx.room.PrimaryKey;\r\nimport androidx.room.TypeConverter;\r\nimport androidx.room.TypeConverters;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\n@Entity(tableName = \"buses\")\r\n@TypeConverters(BooleanArrayConverter.class)\r\npublic class Bus {\r\n    @PrimaryKey(autoGenerate = true)\r\n    private int id;\r\n    private String busNumber;\r\n    private String busName;\r\n    private String source;\r\n    private String destination;\r\n    private String departureTime;\r\n    private String arrivalTime;\r\n    private double fare;\r\n    private int totalSeats;\r\n    private int availableSeats;\r\n    private String busType;\r\n    private boolean[] seatStatus; // true for available, false for booked\r\n\r\n    public Bus(String busNumber, String busName, String source, String destination,\r\n               String departureTime, String arrivalTime, double fare, int totalSeats,\r\n               int availableSeats, String busType) {\r\n        this.busNumber = busNumber;\r\n        this.busName = busName;\r\n        this.source = source;\r\n        this.destination = destination;\r\n        this.departureTime = departureTime;\r\n        this.arrivalTime = arrivalTime;\r\n        this.fare = fare;\r\n        this.totalSeats = totalSeats;\r\n        this.availableSeats = availableSeats;\r\n        this.busType = busType;\r\n        this.seatStatus = new boolean[totalSeats];\r\n        for (int i = 0; i < totalSeats; i++) {\r\n            seatStatus[i] = true;\r\n        }\r\n    }\r\n\r\n    // Enhanced seat management methods\r\n    public boolean isSeatAvailable(int seatNumber) {\r\n        return seatNumber > 0 && seatNumber <= totalSeats && seatStatus[seatNumber - 1];\r\n    }\r\n\r\n    public boolean bookSeat(int seatNumber) {\r\n        if (isSeatAvailable(seatNumber)) {\r\n            seatStatus[seatNumber - 1] = false;\r\n            availableSeats--;\r\n            return true;\r\n        }\r\n        return false;\r\n    }\r\n\r\n    public boolean cancelSeat(int seatNumber) {\r\n        if (seatNumber > 0 && seatNumber <= totalSeats && !seatStatus[seatNumber - 1]) {\r\n            seatStatus[seatNumber - 1] = true;\r\n            availableSeats++;\r\n            return true;\r\n        }\r\n        return false;\r\n    }\r\n\r\n    // Getters and Setters\r\n    public int getId() { return id; }\r\n    public void setId(int id) { this.id = id; }\r\n    public String getBusNumber() { return busNumber; }\r\n    public void setBusNumber(String busNumber) { this.busNumber = busNumber; }\r\n    public String getBusName() { return busName; }\r\n    public void setBusName(String busName) { this.busName = busName; }\r\n    public String getSource() { return source; }\r\n    public void setSource(String source) { this.source = source; }\r\n    public String getDestination() { return destination; }\r\n    public void setDestination(String destination) { this.destination = destination; }\r\n    public String getDepartureTime() { return departureTime; }\r\n    public void setDepartureTime(String departureTime) { this.departureTime = departureTime; }\r\n    public String getArrivalTime() { return arrivalTime; }\r\n    public void setArrivalTime(String arrivalTime) { this.arrivalTime = arrivalTime; }\r\n    public double getFare() { return fare; }\r\n    public void setFare(double fare) { this.fare = fare; }\r\n    public int getTotalSeats() { return totalSeats; }\r\n    public void setTotalSeats(int totalSeats) { this.totalSeats = totalSeats; }\r\n    public int getAvailableSeats() { return availableSeats; }\r\n    public void setAvailableSeats(int availableSeats) { this.availableSeats = availableSeats; }\r\n    public String getBusType() { return busType; }\r\n    public void setBusType(String busType) { this.busType = busType; }\r\n    public boolean[] getSeatStatus() { return seatStatus; }\r\n    public void setSeatStatus(boolean[] seatStatus) { this.seatStatus = seatStatus; }\r\n}\r\n\r\n
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/data/model/Bus.java b/app/src/main/java/com/example/bus_booking_system/data/model/Bus.java
+---- a/app/src/main/java/com/example/bus_booking_system/data/model/Bus.java	(revision 6a8ec2d01295dc751b64700f444732650735d00f)
+-+++ b/app/src/main/java/com/example/bus_booking_system/data/model/Bus.java	(date 1736948259637)
+-@@ -12,8 +12,8 @@
+- public class Bus {
+-     @PrimaryKey(autoGenerate = true)
+-     private int id;
+--    private String busNumber;
+-     private String busName;
+-+    private String busNumber;
+-     private String source;
+-     private String destination;
+-     private String departureTime;
+-@@ -21,14 +21,12 @@
+-     private double fare;
+-     private int totalSeats;
+-     private int availableSeats;
+--    private String busType;
+-     private boolean[] seatStatus; // true for available, false for booked
+- 
+--    public Bus(String busNumber, String busName, String source, String destination,
+--               String departureTime, String arrivalTime, double fare, int totalSeats,
+--               int availableSeats, String busType) {
+--        this.busNumber = busNumber;
+-+    public Bus(String busName, String busNumber, String source, String destination,
+-+              String departureTime, String arrivalTime, double fare, int totalSeats, int availableSeats) {
+-         this.busName = busName;
+-+        this.busNumber = busNumber;
+-         this.source = source;
+-         this.destination = destination;
+-         this.departureTime = departureTime;
+-@@ -36,7 +34,6 @@
+-         this.fare = fare;
+-         this.totalSeats = totalSeats;
+-         this.availableSeats = availableSeats;
+--        this.busType = busType;
+-         this.seatStatus = new boolean[totalSeats];
+-         for (int i = 0; i < totalSeats; i++) {
+-             seatStatus[i] = true;
+-@@ -69,10 +66,10 @@
+-     // Getters and Setters
+-     public int getId() { return id; }
+-     public void setId(int id) { this.id = id; }
+--    public String getBusNumber() { return busNumber; }
+--    public void setBusNumber(String busNumber) { this.busNumber = busNumber; }
+-     public String getBusName() { return busName; }
+-     public void setBusName(String busName) { this.busName = busName; }
+-+    public String getBusNumber() { return busNumber; }
+-+    public void setBusNumber(String busNumber) { this.busNumber = busNumber; }
+-     public String getSource() { return source; }
+-     public void setSource(String source) { this.source = source; }
+-     public String getDestination() { return destination; }
+-@@ -87,8 +84,6 @@
+-     public void setTotalSeats(int totalSeats) { this.totalSeats = totalSeats; }
+-     public int getAvailableSeats() { return availableSeats; }
+-     public void setAvailableSeats(int availableSeats) { this.availableSeats = availableSeats; }
+--    public String getBusType() { return busType; }
+--    public void setBusType(String busType) { this.busType = busType; }
+-     public boolean[] getSeatStatus() { return seatStatus; }
+-     public void setSeatStatus(boolean[] seatStatus) { this.seatStatus = seatStatus; }
+- }
+-Index: .idea/misc.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_21\" default=\"true\" project-jdk-name=\"jbr-21\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/misc.xml b/.idea/misc.xml
+---- a/.idea/misc.xml	(revision a57434c119edff90e6332376f3d1a75de1c17f66)
+-+++ b/.idea/misc.xml	(date 1736943193993)
+-@@ -1,9 +1,5 @@
+-+<?xml version="1.0" encoding="UTF-8"?>
+- <project version="4">
+-   <component name="ExternalStorageConfigurationManager" enabled="true" />
+--  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+--    <output url="file://$PROJECT_DIR$/build/classes" />
+--  </component>
+--  <component name="ProjectType">
+--    <option name="id" value="Android" />
+--  </component>
+-+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK" />
+- </project>
+-\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+deleted file mode 100644
+--- a/.idea/compiler.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="CompilerConfiguration">
+-    <bytecodeTargetLevel target="21" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_15_01_2025,_8_28_pm_[Changes]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_15_01_2025,_8_28_pm_[Changes]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_15_01_2025,_8_28_pm_[Changes]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_15_01_2025,_8_28_pm_[Changes]/shelved.patch	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,19 +0,0 @@
+-Index: app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+>package com.example.bus_booking_system.ui.fragments;\n\nimport android.os.Bundle;\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\n\nimport androidx.annotation.NonNull;\nimport androidx.annotation.Nullable;\nimport androidx.fragment.app.Fragment;\nimport androidx.lifecycle.ViewModelProvider;\nimport androidx.recyclerview.widget.LinearLayoutManager;\n\nimport com.example.bus_booking_system.data.model.Booking;\nimport com.example.bus_booking_system.databinding.FragmentBookingsBinding;\nimport com.example.bus_booking_system.ui.adapter.BookingsAdapter;\nimport com.example.bus_booking_system.utils.SessionManager;\nimport com.example.bus_booking_system.viewmodel.BookingViewModel;\n\nimport java.util.ArrayList;\n\npublic class BookingsFragment extends Fragment {\n    private FragmentBookingsBinding binding;\n    private BookingViewModel bookingViewModel;\n    private SessionManager sessionManager;\n\n    private BookingsAdapter bookingsAdapter;\n\n\n    @Override\n    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {\n        binding = FragmentBookingsBinding.inflate(inflater, container, false);\n        return binding.getRoot();\n    }\n\n    @Override\n    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {\n        super.onViewCreated(view, savedInstanceState);\n        setupViewModel();\n        setupUI();\n    }\n\n    private void setupViewModel() {\n        bookingViewModel = new ViewModelProvider(this).get(BookingViewModel.class);\n        bookingViewModel.insert(new Booking(\n            2,  // userId\n            2,  // busId\n            \"2025-01-14\",  // bookingDate\n            \"2025-01-21\",  // journeyDate\n            5,  // seatNumber\n            55.00  // fare\n        ));\n\n        sessionManager = new SessionManager(requireContext());\n    }\n\n    private void setupUI() {\n        binding.bookingsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));\n        bookingsAdapter = new BookingsAdapter(new ArrayList<>());\n        binding.bookingsRecyclerView.setAdapter(bookingsAdapter);\n\n        int userId = sessionManager.getUserId();\n        bookingViewModel.getUserBookings(userId).observe(getViewLifecycleOwner(), bookings -> {\n            bookingsAdapter.setBookings(bookings);\n            binding.emptyView.setVisibility(bookings.isEmpty() ? View.VISIBLE : View.GONE);\n            binding.bookingsRecyclerView.setVisibility(bookings.isEmpty() ? View.GONE : View.VISIBLE);\n        });\n    }\n\n\n    @Override\n    public void onDestroyView() {\n        super.onDestroyView();\n        binding = null;\n    }\n}
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java b/app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java
+---- a/app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java	(revision 94fae0299c24235e8d77519fddf817b067b32950)
+-+++ b/app/src/main/java/com/example/bus_booking_system/ui/fragments/BookingsFragment.java	(date 1736943377604)
+-@@ -43,7 +43,7 @@
+-     private void setupViewModel() {
+-         bookingViewModel = new ViewModelProvider(this).get(BookingViewModel.class);
+-         bookingViewModel.insert(new Booking(
+--            2,  // userId
+-+            1,  // userId
+-             2,  // busId
+-             "2025-01-14",  // bookingDate
+-             "2025-01-21",  // journeyDate
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+deleted file mode 100644
+--- a/.idea/gradle.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,20 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="GradleMigrationSettings" migrationVersion="1" />
+-  <component name="GradleSettings">
+-    <option name="linkedExternalProjectsSettings">
+-      <GradleProjectSettings>
+-        <option name="testRunner" value="CHOOSE_PER_TEST" />
+-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-        <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+-        <option name="modules">
+-          <set>
+-            <option value="$PROJECT_DIR$" />
+-            <option value="$PROJECT_DIR$/app" />
+-          </set>
+-        </option>
+-        <option name="resolveExternalAnnotations" value="false" />
+-      </GradleProjectSettings>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+deleted file mode 100644
+--- a/.idea/vcs.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="VcsDirectoryMappings">
+-    <mapping directory="" vcs="Git" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/appInsightsSettings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/appInsightsSettings.xml b/.idea/appInsightsSettings.xml
+deleted file mode 100644
+--- a/.idea/appInsightsSettings.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,26 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="AppInsightsSettings">
+-    <option name="tabSettings">
+-      <map>
+-        <entry key="Firebase Crashlytics">
+-          <value>
+-            <InsightsFilterSettings>
+-              <option name="connection">
+-                <ConnectionSetting>
+-                  <option name="appId" value="PLACEHOLDER" />
+-                  <option name="mobileSdkAppId" value="" />
+-                  <option name="projectId" value="" />
+-                  <option name="projectNumber" value="" />
+-                </ConnectionSetting>
+-              </option>
+-              <option name="signal" value="SIGNAL_UNSPECIFIED" />
+-              <option name="timeIntervalDays" value="THIRTY_DAYS" />
+-              <option name="visibilityType" value="ALL" />
+-            </InsightsFilterSettings>
+-          </value>
+-        </entry>
+-      </map>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_15_01_2025__8_28_pm__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_15_01_2025__8_28_pm__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_15_01_2025__8_28_pm__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_15_01_2025__8_28_pm__Changes_.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_15_01_2025,_8_28_pm_[Changes]" date="1736944109843" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_15_01_2025,_8_28_pm_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 15/01/2025, 8:28 pm [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+deleted file mode 100644
+--- a/.idea/deploymentTargetSelector.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="deploymentTargetSelector">
+-    <selectionStates>
+-      <SelectionState runConfigName="Unnamed">
+-        <option name="selectionMode" value="DROPDOWN" />
+-      </SelectionState>
+-    </selectionStates>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/migrations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/migrations.xml b/.idea/migrations.xml
+deleted file mode 100644
+--- a/.idea/migrations.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="ProjectMigrations">
+-    <option name="MigrateToGradleLocalJavaHome">
+-      <set>
+-        <option value="$PROJECT_DIR$" />
+-      </set>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+deleted file mode 100644
+--- a/.idea/misc.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,5 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="ExternalStorageConfigurationManager" enabled="true" />
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK" />
+-</project>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM__Changes_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM__Changes_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM__Changes_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM__Changes_.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM_[Changes]" date="1736948945848" recycled="false" toDelete="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_15_2025_9_49_PM_[Changes]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 1/15/2025 9:49 PM [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/runConfigurations.xml b/.idea/runConfigurations.xml
+deleted file mode 100644
+--- a/.idea/runConfigurations.xml	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
++++ /dev/null	(revision 4cd66c7399201755f666a4bfbfbf31fea37885fd)
+@@ -1,13 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="RunConfigurationProducerService">
+-    <option name="ignoredProducers">
+-      <set>
+-        <option value="com.intellij.execution.junit.AbstractAllInDirectoryConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.AllInPackageConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.TestInClassConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.UniqueIdConfigurationProducer" />
+-      </set>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file

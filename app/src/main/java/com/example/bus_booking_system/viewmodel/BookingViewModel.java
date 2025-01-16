@@ -2,6 +2,7 @@ package com.example.bus_booking_system.viewmodel;
 
 import android.app.Application;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -36,7 +37,7 @@ public class BookingViewModel extends AndroidViewModel {
     }
 
     public void insert(Booking booking, BookingRepository.BookingCallback callback) {
-        repository.insert(booking, callback);
+        repository.insertSync(booking, callback);
     }
 
     public void update(Booking booking) {
@@ -57,8 +58,22 @@ public class BookingViewModel extends AndroidViewModel {
 
     public boolean insertSync(Booking booking) {
         try {
+            System.out.println("insertSync");
             // Attempt to insert booking synchronously
-            boolean result = repository.insertSync(booking);
+            boolean result = repository.insertSync(booking, new BookingRepository.BookingCallback() {
+                @Override
+                public void onSuccess(long bookingId) {
+                    Toast.makeText(BookingViewModel.this.getApplication(), "Booking inserted successfully with ID: " + bookingId, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(BookingViewModel.this.getApplication(), "Booking insertion failed: " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
+            System.out.println("boolean result = repository.insertSync(booking);");
+            System.out.println("result");
+
             Log.d("BookingViewModel", "Synchronous booking insert result: " + result);
             return result;
         } catch (Exception e) {

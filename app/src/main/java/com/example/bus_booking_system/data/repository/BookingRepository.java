@@ -40,39 +40,81 @@ public class BookingRepository {
         return bookingDao.getBookingsByBusAndDate(busId, journeyDate);
     }
 
-    public void insert(Booking booking, BookingCallback callback) {
-        executorService.execute(() -> {
-            try {
-                // Check if user and bus exist
-                if (!bookingDao.checkUserExists(booking.getUserId())) {
-                    Log.e("BookingRepository", "User not found: " + booking.getUserId());
-                    callback.onError("User not found");
-                    return;
-                }
-                if (!bookingDao.checkBusExists(booking.getBusId())) {
-                    Log.e("BookingRepository", "Bus not found: " + booking.getBusId());
-                    callback.onError("Bus not found");
-                    return;
-                }
-                
-                // Insert booking into the database
-                long id = bookingDao.insert(booking);
-                Log.d("BookingRepository", "Booking inserted with ID: " + id);
-                callback.onSuccess(id);
-            } catch (Exception e) {
-                Log.e("BookingRepository", "Error inserting booking: " + e.getMessage());
-                callback.onError(e.getMessage());
-            }
-        });
-    }
+//    public void insert(Booking booking, BookingCallback callback) {
+//        executorService.execute(() -> {
+//            try {
+//                // Check if user and bus exist
+//                if (!bookingDao.checkUserExists(booking.getUserId())) {
+//                    Log.e("BookingRepository", "User not found: " + booking.getUserId());
+//                    callback.onError("User not found");
+//                    return;
+//                }
+//                if (!bookingDao.checkBusExists(booking.getBusId())) {
+//                    Log.e("BookingRepository", "Bus not found: " + booking.getBusId());
+//                    callback.onError("Bus not found");
+//                    return;
+//                }
+//
+//                // Insert booking into the database
+//                long id = bookingDao.insert(booking);
+//                Log.d("BookingRepository", "Booking inserted with ID: " + id);
+//                callback.onSuccess(id);
+//            } catch (Exception e) {
+//                Log.e("BookingRepository", "Error inserting booking: " + e.getMessage());
+//                callback.onError(e.getMessage());
+//            }
+//        });
+//
+//        public boolean insert(Booking booking, BookingCallback callback) {
+//            final boolean[] result = {false};
+//            executorService.execute(() -> {
+//                try {
+//                    // Check if user and bus exist
+//                    if (!bookingDao.checkUserExists(booking.getUserId())) {
+//                        Log.e("BookingRepository", "User not found: " + booking.getUserId());
+//                        callback.onError("User not found");
+//                        return ;
+//                    }
+//                    if (!bookingDao.checkBusExists(booking.getBusId())) {
+//                        Log.e("BookingRepository", "Bus not found: " + booking.getBusId());
+//                        callback.onError("Bus not found");
+//                        return ;
+//                    }
+//
+//                    result[0] = bookingDao.insert(booking) > 0;
+//                    return result[0];
+//
+//                } catch (Exception e) {
+//                    Log.e("BookingRepository", "Error inserting booking: " + e.getMessage());
+//                    callback.onError(e.getMessage());
+//                }
+//                return result[0];
+//            });
+//
+//
+//
+//
+//            executorService.execute(() -> {
+//            try {
+//                Log.d("insertSync", String.valueOf((bookingDao.insertSync(booking))));
+//                // Insert booking synchronously
+//                result[0] = bookingDao.insert(booking) > 0;
+//                Log.d("BookingRepository", "Synchronous booking insert result: " + result[0]);
+//            } catch (Exception e) {
+//                Log.e("BookingRepository", "Error in synchronous booking insert: " + e.getMessage());
+//            }
+//        });
+//        return result[0];
+//    }
 
-    public boolean insertSync(Booking booking) {
+    public boolean insertSync(Booking booking, BookingCallback callback) {
         final boolean[] result = {false};
         CountDownLatch latch = new CountDownLatch(1);
         executorService.execute(() -> {
             try {
+                Log.d("insertSync", String.valueOf((bookingDao.insertSync(booking))));
                 // Insert booking synchronously
-                result[0] = bookingDao.insertSync(booking) > 0;
+                result[0] = bookingDao.insert(booking) > 0;
                 Log.d("BookingRepository", "Synchronous booking insert result: " + result[0]);
             } catch (Exception e) {
                 Log.e("BookingRepository", "Error in synchronous booking insert: " + e.getMessage());
