@@ -139,10 +139,10 @@ public class BusRepository {
     }
 
     public boolean[] getBookedSeatsForDateSync(int busId, String journeyDate) {
-        final boolean[][] result = {null};
+        boolean[] seatStatus = new boolean[30];
         executorService.execute(() -> {
             List<Booking> bookings = busDao.getBookingsByBusAndDateSync(busId, journeyDate);
-            boolean[] seatStatus = new boolean[30];
+
             Arrays.fill(seatStatus, true);
             for (Booking booking : bookings) {
                 int seatNumber = booking.getSeatNumber();
@@ -150,8 +150,8 @@ public class BusRepository {
                     seatStatus[seatNumber - 1] = false;
                 }
             }
-            result[0] = seatStatus;
+
         });
-        return result[0];
+        return seatStatus;
     }
 } 

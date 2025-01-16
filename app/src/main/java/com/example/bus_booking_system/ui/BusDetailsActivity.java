@@ -27,6 +27,7 @@ import com.example.bus_booking_system.viewmodel.BusViewModel;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -157,6 +158,7 @@ public class BusDetailsActivity extends AppCompatActivity {
         @Override
         protected boolean[] doInBackground(Integer... params) {
             int busId = params[0];
+            System.out.println(Arrays.toString(busViewModel.getBookedSeatsForDateSync(busId, journeyDate)));
             return busViewModel.getBookedSeatsForDateSync(busId, journeyDate);
         }
 
