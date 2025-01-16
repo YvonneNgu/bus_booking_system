@@ -12,6 +12,7 @@ import com.example.bus_booking_system.data.model.Booking;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.CountDownLatch;
 
 public class BookingRepository {
     private BookingDao bookingDao;
@@ -65,6 +66,28 @@ public class BookingRepository {
         });
     }
 
+    public boolean insertSync(Booking booking) {
+        final boolean[] result = {false};
+        CountDownLatch latch = new CountDownLatch(1);
+        executorService.execute(() -> {
+            try {
+                // Insert booking synchronously
+                result[0] = bookingDao.insertSync(booking) > 0;
+                Log.d("BookingRepository", "Synchronous booking insert result: " + result[0]);
+            } catch (Exception e) {
+                Log.e("BookingRepository", "Error in synchronous booking insert: " + e.getMessage());
+            } finally {
+                latch.countDown();
+            }
+        });
+        try {
+            latch.await(); // Wait for the task to complete
+        } catch (InterruptedException e) {
+            Log.e("BookingRepository", "Interrupted while waiting for booking insert: " + e.getMessage());
+        }
+        return result[0];
+    }
+
     public void update(Booking booking) {
         executorService.execute(() -> bookingDao.update(booking));
     }
@@ -79,20 +102,6 @@ public class BookingRepository {
 
     public void updatePaymentStatus(int bookingId, String paymentStatus) {
         executorService.execute(() -> bookingDao.updatePaymentStatus(bookingId, paymentStatus));
-    }
-
-    public boolean insertSync(Booking booking) {
-        final boolean[] result = {false};
-        executorService.execute(() -> {
-            try {
-                // Insert booking synchronously
-                result[0] = bookingDao.insertSync(booking) > 0;
-                Log.d("BookingRepository", "Synchronous booking insert result: " + result[0]);
-            } catch (Exception e) {
-                Log.e("BookingRepository", "Error in synchronous booking insert: " + e.getMessage());
-            }
-        });
-        return result[0];
     }
 
     public interface BookingCallback {

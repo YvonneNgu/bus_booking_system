@@ -180,13 +180,16 @@ public class BusDetailsActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Booking... bookings) {
             Booking booking = bookings[0];
-            return bookingViewModel.insertSync(booking);
+            boolean result = bookingViewModel.insertSync(booking);
+            if (result) {
+                busViewModel.bookSeat(currentBus.getId(), selectedSeat);
+            }
+            return result;
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
             if (success) {
-                busViewModel.bookSeat(currentBus.getId(), selectedSeat);
                 Toast.makeText(BusDetailsActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
