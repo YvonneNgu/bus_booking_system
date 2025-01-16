@@ -57,7 +57,12 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(requireContext(), BusDetailsActivity.class);
                 intent.putExtra("bus_id", bus.getId());
                 intent.putExtra("journey_date", todayDate);
-
+                intent.putExtra("bus_number", bus.getBusNumber());
+                intent.putExtra("available_seats", bus.getAvailableSeats());
+                intent.putExtra("departure_time", bus.getDepartureTime());
+                intent.putExtra("arrival_time", bus.getArrivalTime());
+                intent.putExtra("destination", bus.getDestination());
+                intent.putExtra("source", bus.getSource());
                 // Add logging to verify the data being passed
                 Log.d("SearchFragment", "Sending bus_id: " + bus.getId());
                 Log.d("SearchFragment", "Sending journey_date: " + todayDate);

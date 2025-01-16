@@ -16,6 +16,9 @@ public interface BookingDao {
     @Insert
     long insert(Booking booking);
     
+    @Insert
+    long insertSync(Booking booking);
+    
     @Update
     void update(Booking booking);
     
