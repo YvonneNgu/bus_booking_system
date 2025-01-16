@@ -12,8 +12,8 @@ import java.util.List;
 public class Bus {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String busNumber;
     private String busName;
+    private String busNumber;
     private String source;
     private String destination;
     private String departureTime;
@@ -21,14 +21,12 @@ public class Bus {
     private double fare;
     private int totalSeats;
     private int availableSeats;
-    private String busType;
     private boolean[] seatStatus; // true for available, false for booked
 
-    public Bus(String busNumber, String busName, String source, String destination,
-               String departureTime, String arrivalTime, double fare, int totalSeats,
-               int availableSeats, String busType) {
-        this.busNumber = busNumber;
+    public Bus(String busName, String busNumber, String source, String destination,
+              String departureTime, String arrivalTime, double fare, int totalSeats, int availableSeats) {
         this.busName = busName;
+        this.busNumber = busNumber;
         this.source = source;
         this.destination = destination;
         this.departureTime = departureTime;
@@ -36,7 +34,6 @@ public class Bus {
         this.fare = fare;
         this.totalSeats = totalSeats;
         this.availableSeats = availableSeats;
-        this.busType = busType;
         this.seatStatus = new boolean[totalSeats];
         for (int i = 0; i < totalSeats; i++) {
             seatStatus[i] = true;
@@ -69,10 +66,10 @@ public class Bus {
     // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-    public String getBusNumber() { return busNumber; }
-    public void setBusNumber(String busNumber) { this.busNumber = busNumber; }
     public String getBusName() { return busName; }
     public void setBusName(String busName) { this.busName = busName; }
+    public String getBusNumber() { return busNumber; }
+    public void setBusNumber(String busNumber) { this.busNumber = busNumber; }
     public String getSource() { return source; }
     public void setSource(String source) { this.source = source; }
     public String getDestination() { return destination; }
@@ -87,8 +84,6 @@ public class Bus {
     public void setTotalSeats(int totalSeats) { this.totalSeats = totalSeats; }
     public int getAvailableSeats() { return availableSeats; }
     public void setAvailableSeats(int availableSeats) { this.availableSeats = availableSeats; }
-    public String getBusType() { return busType; }
-    public void setBusType(String busType) { this.busType = busType; }
     public boolean[] getSeatStatus() { return seatStatus; }
     public void setSeatStatus(boolean[] seatStatus) { this.seatStatus = seatStatus; }
 }
