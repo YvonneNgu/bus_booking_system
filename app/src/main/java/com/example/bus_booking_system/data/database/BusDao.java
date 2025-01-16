@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.bus_booking_system.data.model.Bus;
+import com.example.bus_booking_system.data.model.Booking;
 
 import java.util.List;
 
@@ -57,4 +58,10 @@ public interface BusDao {
 
     @Query("UPDATE buses SET seatStatus = :seatStatus WHERE id = :busId")
     void updateSeatStatus(int busId, boolean[] seatStatus);
+
+    @Insert
+    long insertSync(Bus bus);
+
+    @Query("SELECT * FROM bookings WHERE busId = :busId AND journeyDate = :journeyDate")
+    List<Booking> getBookingsByBusAndDateSync(int busId, String journeyDate);
 } 

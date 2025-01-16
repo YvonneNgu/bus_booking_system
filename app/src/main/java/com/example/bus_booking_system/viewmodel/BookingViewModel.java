@@ -1,6 +1,7 @@
 package com.example.bus_booking_system.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -52,5 +53,17 @@ public class BookingViewModel extends AndroidViewModel {
 
     public void updatePaymentStatus(int bookingId, String paymentStatus) {
         repository.updatePaymentStatus(bookingId, paymentStatus);
+    }
+
+    public boolean insertSync(Booking booking) {
+        try {
+            // Attempt to insert booking synchronously
+            boolean result = repository.insertSync(booking);
+            Log.d("BookingViewModel", "Synchronous booking insert result: " + result);
+            return result;
+        } catch (Exception e) {
+            Log.e("BookingViewModel", "Error in synchronous booking insert: " + e.getMessage());
+            return false;
+        }
     }
 } 

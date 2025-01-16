@@ -3,6 +3,7 @@ package com.example.bus_booking_system.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -152,14 +153,17 @@ public class BusDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private void loadBookedSeats(int busId) {
-        // Load booked seats for the specific journey date
-        busViewModel.getBookedSeatsForDate(busId, journeyDate).observe(this, seatStatus -> {
-            if (seatStatus != null) {
+    private class LoadBookedSeatsTask extends AsyncTask<Integer, Void, boolean[]> {
+        @Override
+        protected boolean[] doInBackground(Integer... params) {
+            int busId = params[0];
+            return busViewModel.getBookedSeatsForDateSync(busId, journeyDate);
+        }
 
+        @Override
+        protected void onPostExecute(boolean[] seatStatus) {
+            if (seatStatus != null) {
                 for (int i = 0; i < seatStatus.length; i++) {
-                    System.out.println("SEAT STATUS");
-                    System.out.println(seatStatus[i]);
                     MaterialButton seatButton = seatButtons[i];
                     if (!seatStatus[i]) { // Seat is booked
                         seatButton.setEnabled(false);
@@ -169,7 +173,30 @@ public class BusDetailsActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
+        }
+    }
+
+    private class InsertBookingTask extends AsyncTask<Booking, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Booking... bookings) {
+            Booking booking = bookings[0];
+            return bookingViewModel.insertSync(booking);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                busViewModel.bookSeat(currentBus.getId(), selectedSeat);
+                Toast.makeText(BusDetailsActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(BusDetailsActivity.this, "Booking failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void loadBookedSeats(int busId) {
+        new LoadBookedSeatsTask().execute(busId);
     }
 
     private void onSeatSelected(int seatNumber) {
@@ -212,16 +239,14 @@ public class BusDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        // Get current date for booking date
         String currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 .format(new Date());
 
-        // Create booking with journey date from search
         Booking booking = new Booking(
                 sessionManager.getUserId(),
                 currentBus.getId(),
-                currentDate,  // Booking date (today)
-                journeyDate, // Journey date (selected by user)
+                currentDate,
+                journeyDate,
                 selectedSeat,
                 currentBus.getFare(),
                 source,
@@ -230,25 +255,7 @@ public class BusDetailsActivity extends AppCompatActivity {
                 arrivalTime
         );
 
-        // Insert booking with callback for success/failure
-        bookingViewModel.insert(booking, new BookingRepository.BookingCallback() {
-            @Override
-            public void onSuccess(long bookingId) {
-                runOnUiThread(() -> {
-                    // Update bus seat status and show success message
-                    busViewModel.bookSeat(currentBus.getId(), selectedSeat);
-                    Toast.makeText(BusDetailsActivity.this, "Booking successful!", Toast.LENGTH_SHORT).show();
-                    finish();
-                });
-            }
-
-            @Override
-            public void onError(String error) {
-                runOnUiThread(() -> {
-                    Toast.makeText(BusDetailsActivity.this, "Booking failed: " + error, Toast.LENGTH_SHORT).show();
-                });
-            }
-        });
+        new InsertBookingTask().execute(booking);
     }
 
     @Override

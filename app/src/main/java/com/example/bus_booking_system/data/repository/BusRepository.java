@@ -9,6 +9,7 @@ import com.example.bus_booking_system.data.database.BusDao;
 import com.example.bus_booking_system.data.model.Bus;
 import com.example.bus_booking_system.data.model.Booking;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -127,5 +128,30 @@ public class BusRepository {
      */
     public LiveData<List<Booking>> getBookingsByBusAndDate(int busId, String journeyDate) {
         return AppDatabase.getDatabase(getApplication()).bookingDao().getBookingsByBusAndDate(busId, journeyDate);
+    }
+
+    public boolean insertSync(Bus bus) {
+        final boolean[] result = {false};
+        executorService.execute(() -> {
+            result[0] = busDao.insertSync(bus) > 0;
+        });
+        return result[0];
+    }
+
+    public boolean[] getBookedSeatsForDateSync(int busId, String journeyDate) {
+        final boolean[][] result = {null};
+        executorService.execute(() -> {
+            List<Booking> bookings = busDao.getBookingsByBusAndDateSync(busId, journeyDate);
+            boolean[] seatStatus = new boolean[30];
+            Arrays.fill(seatStatus, true);
+            for (Booking booking : bookings) {
+                int seatNumber = booking.getSeatNumber();
+                if (seatNumber > 0 && seatNumber <= seatStatus.length) {
+                    seatStatus[seatNumber - 1] = false;
+                }
+            }
+            result[0] = seatStatus;
+        });
+        return result[0];
     }
 } 

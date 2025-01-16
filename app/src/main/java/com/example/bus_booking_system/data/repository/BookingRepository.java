@@ -1,6 +1,7 @@
 package com.example.bus_booking_system.data.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -43,17 +44,22 @@ public class BookingRepository {
             try {
                 // Check if user and bus exist
                 if (!bookingDao.checkUserExists(booking.getUserId())) {
+                    Log.e("BookingRepository", "User not found: " + booking.getUserId());
                     callback.onError("User not found");
                     return;
                 }
                 if (!bookingDao.checkBusExists(booking.getBusId())) {
+                    Log.e("BookingRepository", "Bus not found: " + booking.getBusId());
                     callback.onError("Bus not found");
                     return;
                 }
                 
+                // Insert booking into the database
                 long id = bookingDao.insert(booking);
+                Log.d("BookingRepository", "Booking inserted with ID: " + id);
                 callback.onSuccess(id);
             } catch (Exception e) {
+                Log.e("BookingRepository", "Error inserting booking: " + e.getMessage());
                 callback.onError(e.getMessage());
             }
         });
@@ -73,6 +79,20 @@ public class BookingRepository {
 
     public void updatePaymentStatus(int bookingId, String paymentStatus) {
         executorService.execute(() -> bookingDao.updatePaymentStatus(bookingId, paymentStatus));
+    }
+
+    public boolean insertSync(Booking booking) {
+        final boolean[] result = {false};
+        executorService.execute(() -> {
+            try {
+                // Insert booking synchronously
+                result[0] = bookingDao.insertSync(booking) > 0;
+                Log.d("BookingRepository", "Synchronous booking insert result: " + result[0]);
+            } catch (Exception e) {
+                Log.e("BookingRepository", "Error in synchronous booking insert: " + e.getMessage());
+            }
+        });
+        return result[0];
     }
 
     public interface BookingCallback {

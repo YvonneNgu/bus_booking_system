@@ -134,4 +134,12 @@ public class BusViewModel extends AndroidViewModel {
         );
 
     }
+
+    public boolean insertSync(Bus bus) {
+        return repository.insertSync(bus);
+    }
+
+    public boolean[] getBookedSeatsForDateSync(int busId, String journeyDate) {
+        return repository.getBookedSeatsForDateSync(busId, journeyDate);
+    }
 } 
