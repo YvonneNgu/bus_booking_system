@@ -36,9 +36,6 @@ public class BookingViewModel extends AndroidViewModel {
         return repository.getBookingsByBusAndDate(busId, journeyDate);
     }
 
-    public void insert(Booking booking, BookingRepository.BookingCallback callback) {
-        repository.insertSync(booking, callback);
-    }
 
     public void update(Booking booking) {
         repository.update(booking);

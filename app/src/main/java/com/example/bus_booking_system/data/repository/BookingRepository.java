@@ -112,7 +112,6 @@ public class BookingRepository {
         CountDownLatch latch = new CountDownLatch(1);
         executorService.execute(() -> {
             try {
-                Log.d("insertSync", String.valueOf((bookingDao.insertSync(booking))));
                 // Insert booking synchronously
                 result[0] = bookingDao.insert(booking) > 0;
                 Log.d("BookingRepository", "Synchronous booking insert result: " + result[0]);
